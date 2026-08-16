@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/png" href="assets/icons/app-icon.png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Quick Notes — fast, organised notes for people, groups and recurring work.">
+  <title>QUICK NOTES</title>
+  <link rel="stylesheet" href="styles/tokens.css">
+  <link rel="stylesheet" href="styles/components.css">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles/layout.css">
+  <link rel="stylesheet" href="styles/icons.css?v=1786881855548">
+</head>
+<body>
+  <section class="dashboard" id="dashboard" aria-labelledby="dashboardTitle">
+    <header class="dashboard-top">
+      <button class="dashboard-brand" id="dashboardBrand" aria-label="Quick Notes home"><strong>QUICK NOTES</strong></button>
+      <div class="dashboard-tools"><button class="dashboard-settings dashboard-install-update" id="dashboardInstallUpdate" type="button" hidden><span class="ui-icon icon-mask icon-ui-download" aria-hidden="true"></span><span id="dashboardInstallUpdateLabel">Install</span></button><div class="language-switch" aria-label="Language"><button data-dashboard-lang="ru">RU</button><button data-dashboard-lang="en">ENG</button></div><button class="dashboard-settings" id="dashboardSettings"><span class="ui-icon icon-mask icon-ui-settings" aria-hidden="true"></span><span>Settings</span></button></div>
+    </header>
+    <div class="dashboard-stage">
+      <div class="dashboard-intro"><h1 id="dashboardTitle">Everything important <span>— one click away.</span></h1><p>Personolised notes about students, groups and work-related matters that are always at hand.</p></div>
+      <div class="dashboard-grid">
+        <button class="dashboard-card dashboard-card-notes" id="dashboardNotes"><span class="dashboard-card-icon"><span class="ui-icon icon-mask icon-ui-sparkle" aria-hidden="true"></span></span><span class="dashboard-card-copy"><small>WORKSPACE</small><strong>Students &amp; notes</strong><span>Check or edit your notes</span></span></button>
+        <button class="dashboard-card dashboard-card-quick" id="dashboardQuickNote"><span class="dashboard-card-icon"><span class="ui-icon icon-mask icon-ui-plus" aria-hidden="true"></span></span><span class="dashboard-card-copy"><small>CAPTURE</small><strong>Quick note</strong><span>Add a new quick note</span></span></button>
+        <button class="dashboard-card dashboard-card-todo" id="dashboardTodo"><span class="dashboard-card-icon"><span class="ui-icon icon-mask icon-ui-check" aria-hidden="true"></span></span><span class="dashboard-card-copy"><small>YOUR BOARD</small><strong>To Do Board</strong><span>Lists and tasks at a glance</span></span></button>
+        <button class="dashboard-card dashboard-card-lesson" id="dashboardLesson"><span class="dashboard-card-icon"><span class="ui-icon icon-mask icon-ui-lightning" aria-hidden="true"></span></span><span class="dashboard-card-copy"><small>LIVE CLASS</small><strong>Lesson mode</strong><span>Take notes during the lesson</span></span></button>
+      </div>
+      <section class="dashboard-recent"><div class="dashboard-section-head"><div><small aria-hidden="true">RECENT ACTIVITY</small><h2>LATEST NOTES</h2></div><button id="dashboardAllNotes">Open workspace →</button></div><div class="dashboard-recent-grid" id="dashboardRecentNotes"></div></section>
+    </div>
+    <footer class="dashboard-footer"><span><i></i> Web demo · Saved in this browser only</span><button type="button" disabled>Desktop app · Windows</button></footer>
+  </section>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand-row">
+        <button class="brand" id="homeBtn"><span class="brand-mark">Q</span><span><strong>QUICK NOTES</strong></span></button>
+        <button class="sidebar-home-btn" id="sidebarHomeBtn" type="button" data-tooltip="Home" aria-label="Home">
+          <span class="ui-icon icon-mask icon-ui-home" aria-hidden="true"></span>
+        </button>
+      </div>
+      <div class="sidebar-content" id="workspaceSidebarContent">
+        <label class="search"><span aria-hidden="true"><span class="ui-icon icon-mask icon-ui-search"></span></span><input id="searchInput" type="search" placeholder="Search…" aria-label="Search notes, students and groups"><button class="search-clear" id="searchClearBtn" type="button" aria-label="Clear search" data-tooltip="Clear search" hidden><span class="ui-icon icon-mask icon-ui-close" aria-hidden="true"></span></button></label>
+        <nav id="peopleNav" aria-label="Students and groups"></nav>
+      </div>
+      <div class="sidebar-content" id="todoSidebarContent" hidden>
+        <label class="search todo-search"><span aria-hidden="true"><span class="ui-icon icon-mask icon-ui-search"></span></span><input id="todoSearchInput" type="search" placeholder="Search…" aria-label="Search lists and tasks"><button class="search-clear" id="todoSearchClearBtn" type="button" aria-label="Clear search" data-tooltip="Clear search" hidden><span class="ui-icon icon-mask icon-ui-close" aria-hidden="true"></span></button></label>
+        <nav id="todoNav" aria-label="To Do Board views"></nav>
+      </div>
+      <div class="privacy web-demo-status"><span>●</span><div><strong>Web demo</strong><small>Saved in this browser only</small></div></div>
+    </aside>
+
+    <main class="workspace">
+      <header class="topbar">
+        <button class="icon-btn mobile-only" id="menuBtn" aria-label="Open navigation"><span class="ui-icon icon-mask icon-ui-menu" aria-hidden="true"></span></button><h1 class="todo-topbar-title" id="todoTopbarTitle">TO DO BOARD</h1>
+        <button class="workspace-context" id="workspaceContext" title="Back to profile"><span class="context-avatar" id="contextAvatar"></span><span><strong id="breadcrumbName">QUICK NOTES</strong><small id="breadcrumbDetail">Workspace</small></span></button>
+        <div class="top-actions"><div class="todo-header-actions" id="todoHeaderActions"></div><button class="secondary" id="settingsBtn"><span class="ui-icon icon-mask icon-ui-settings" aria-hidden="true"></span><span>Settings</span></button><button class="lesson-btn" id="lessonBtn"><span class="ui-icon icon-mask icon-ui-sparkle" aria-hidden="true"></span><span>Lesson mode</span></button></div>
+      </header>
+      <section class="content" id="content"></section>
+      <section class="content todo-content" id="todoPage" aria-label="TO DO BOARD" hidden>
+        <div class="todo-page-layout" id="todoPageLayout">
+          <div class="todo-main-stage">
+            <div class="todo-view-tools" id="todoViewTools"></div>
+            <div class="todo-board-grid" id="todoBoards"></div>
+          </div>
+          <aside class="todo-side-rail" id="todoSideRail">
+            <div class="todo-create-actions" id="todoCreateActions"><button class="primary" id="addTodoListBtn" type="button">＋ New list</button><button class="secondary" id="addStandaloneTaskBtn" type="button">＋ New single task</button></div>
+            <div class="todo-side-rail-content" id="todoSideRailContent"></div>
+          </aside>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="todoTaskDialog" class="modal small-modal">
+    <form method="dialog" id="todoTaskForm">
+      <div class="modal-head"><div><p class="eyebrow" id="todoTaskEyebrow">NEW TASK</p><h2 id="todoTaskTitle">Single task</h2></div><button class="close" type="button" data-close-dialog="todoTaskDialog" aria-label="Close"><span class="ui-icon icon-mask icon-ui-close" aria-hidden="true"></span></button></div>
+      <input type="hidden" id="todoTaskId">
+      <label>Task<input id="todoTaskText" required maxlength="240" placeholder="What needs doing?"></label>
+      <label>Deadline <span class="optional">optional</span><input id="todoTaskDue" type="date"></label>
+      <div class="todo-focus-picker"><span>Add to focus</span><button class="todo-modal-star" id="todoTaskStarToggle" type="button" aria-pressed="false" aria-label="Add to focus"><span class="ui-icon icon-mask icon-ui-star" aria-hidden="true"></span></button></div>
+      <div class="modal-actions"><button class="danger" type="button" id="deleteTodoTaskBtn" hidden>Delete</button><span class="action-spacer"></span><button class="secondary" type="button" data-close-dialog="todoTaskDialog">Cancel</button><button class="primary" value="default" id="saveTodoTaskBtn">Save task</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="todoListDialog" class="modal small-modal">
+    <form method="dialog" id="todoListForm">
+      <div class="modal-head"><div><p class="eyebrow" id="todoListEyebrow">NEW LIST</p><h2 id="todoListDialogTitle">Create a list</h2></div><button class="close" type="button" data-close-dialog="todoListDialog" aria-label="Close"><span class="ui-icon icon-mask icon-ui-close" aria-hidden="true"></span></button></div>
+      <input type="hidden" id="todoListId">
+      <label>List name<input id="todoListName" required maxlength="48" placeholder="e.g. Lesson materials"></label>
+      <div class="todo-dialog-fields"><label>Icon<select id="todoListIcon"><option value="list">List</option><option value="calendar">Calendar</option><option value="clock">Clock</option><option value="star">Star</option></select></label><label>Deadline <span class="optional">optional</span><input id="todoListDue" type="date"></label></div>
+      <label class="todo-check-label"><input id="todoListPinned" type="checkbox"> Pin this list</label>
+      <div class="modal-actions"><button class="danger" type="button" id="deleteTodoListBtn" hidden>Delete</button><span class="action-spacer"></span><button class="secondary" type="button" data-close-dialog="todoListDialog">Cancel</button><button class="primary" value="default" id="saveTodoListBtn">Create list</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="noteDialog" class="modal">
+    <form method="dialog" id="noteForm">
+      <div class="modal-head"><div><p class="eyebrow" id="noteDialogEyebrow">NEW NOTE</p><h2 id="noteDialogTitle">Add an observation</h2></div><button class="close" type="button" data-close-dialog="noteDialog" aria-label="Close"><span class="ui-icon icon-mask icon-ui-close" aria-hidden="true"></span></button></div>
+      <input type="hidden" id="noteId">
+      <div class="capture-target-field"><span class="capture-field-label">Student or group</span><div id="notePersonPickerMount"></div></div>
+      <label>Category<select id="noteCategory" required></select></label>
+      <label>Observation<textarea id="noteText" required maxlength="500" rows="5" placeholder="Write a short, useful note…"></textarea></label>
+      <div class="modal-actions"><button class="danger" type="button" id="deleteNoteBtn" hidden>Delete</button><span class="action-spacer"></span><button class="secondary" type="button" data-close-dialog="noteDialog">Cancel</button><button class="primary" id="saveNoteBtn" value="default">Save note</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="categoryDeleteDialog" class="modal small-modal">
+    <form method="dialog" id="categoryDeleteForm">
+      <div class="modal-head"><div><p class="eyebrow">DELETE CATEGORY</p><h2 id="deleteCategoryTitle">Move notes first</h2></div></div>
+      <p class="dialog-copy" id="deleteCategoryCopy"></p><label>Move notes to<select id="deleteCategoryTarget"></select></label>
+      <div class="modal-actions category-delete-actions"><button class="secondary" type="button" id="cancelCategoryDelete">Cancel</button><button class="danger danger-strong" type="button" id="deleteCategoryWithNotes">Delete category &amp; notes</button><button class="danger" value="default">Move notes &amp; delete</button></div>
+    </form>
+  </dialog>
+  <dialog id="unsavedSettingsDialog" class="modal small-modal">
+    <div class="confirm-content"><p class="eyebrow">UNSAVED CHANGES</p><h2>Save your changes?</h2><p class="dialog-copy">You have changed your workspace settings.</p><div class="modal-actions"><button class="secondary" type="button" id="keepEditingSettings">Keep editing</button><button class="danger" type="button" id="discardSettings">Discard</button><button class="primary" type="button" id="confirmSaveSettings">Save changes</button></div></div>
+  </dialog>
+
+  <dialog id="personDialog" class="modal small-modal">
+    <form method="dialog" id="personForm">
+      <div class="modal-head"><div><p class="eyebrow" id="personEyebrow">NEW PROFILE</p><h2 id="personDialogTitle">Add to your workspace</h2></div><button class="close" type="button" data-close-dialog="personDialog" aria-label="Close"><span class="ui-icon icon-mask icon-ui-close" aria-hidden="true"></span></button></div>
+      <input type="hidden" id="personId">
+      <div class="photo-editor">
+        <div class="photo-preview" id="photoPreview">?</div>
+        <div class="photo-controls">
+          <label class="photo-upload"><span id="personPhotoLabel">Choose photo</span><input id="personPhoto" type="file" accept="image/png,image/jpeg,image/webp"></label>
+          <button class="photo-remove photo-remove-icon" type="button" id="removePhotoBtn" title="Remove photo" aria-label="Remove photo" hidden><span class="ui-icon icon-mask icon-ui-trash" aria-hidden="true"></span></button>
+          <small>JPG, PNG or WebP. Stored locally.</small>
+        </div>
+      </div>
+      <label>Name<input id="personName" required maxlength="60" placeholder="e.g. Sophie"></label>
+      <label>Short description <span class="optional">optional</span><input id="personDescription" maxlength="100" placeholder="e.g. B1 · Conversation"></label>
+      <div class="modal-actions"><button class="danger dialog-delete" type="button" id="deleteStudentBtn" hidden><span class="ui-icon icon-mask icon-ui-trash" aria-hidden="true"></span> Delete student</button><span class="action-spacer"></span><button class="secondary" type="button" data-close-dialog="personDialog">Cancel</button><button class="primary" id="savePersonBtn" value="default">Add profile</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="groupDialog" class="modal">
+    <form method="dialog" id="groupForm">
+      <div class="modal-head"><div><p class="eyebrow" id="groupEyebrow">NEW GROUP</p><h2 id="groupDialogTitle">Create a group</h2></div><button class="close" type="button" data-close-dialog="groupDialog" aria-label="Close"><span class="ui-icon icon-mask icon-ui-close" aria-hidden="true"></span></button></div>
+      <input type="hidden" id="groupId"><label>Group name<input id="groupName" required maxlength="60" placeholder="e.g. Masha + Petya"></label><label>Short description <span class="optional">optional</span><input id="groupDescription" maxlength="100" placeholder="e.g. Pair · B1"></label><fieldset class="member-picker"><legend>Members <span class="optional">optional</span></legend><div id="groupMembers"></div></fieldset>
+      <div class="modal-actions"><button class="danger dialog-delete" type="button" id="deleteGroupBtn" hidden><span class="ui-icon icon-mask icon-ui-trash" aria-hidden="true"></span> Delete group</button><span class="action-spacer"></span><button class="secondary" type="button" data-close-dialog="groupDialog">Cancel</button><button class="primary" id="saveGroupBtn" value="default">Create group</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="settingsDialog" class="modal settings-modal">
+    <form method="dialog" id="settingsForm">
+      <div class="modal-head settings-modal-head">
+        <div class="settings-head-copy">
+          <button class="settings-back" type="button" id="settingsBackBtn" aria-label="Back to settings" hidden><span class="ui-icon icon-mask icon-ui-chevron-left" aria-hidden="true"></span><b>Settings</b></button>
+          <p class="eyebrow" id="settingsEyebrow">SETTINGS</p>
+          <h2 id="settingsDialogTitle">Settings</h2>
+        </div>
+        <button class="close" type="button" data-close-dialog="settingsDialog" aria-label="Close"><span class="ui-icon icon-mask icon-ui-close" aria-hidden="true"></span></button>
+      </div>
+
+      <div class="settings-body" id="settingsBody">
+        <section class="settings-home" id="settingsHome" aria-label="Settings sections">
+          <button class="settings-card settings-card-profile" type="button" data-settings-view="profile">
+            <span class="settings-card-icon" aria-hidden="true"><span class="ui-icon icon-mask icon-ui-profile" aria-hidden="true"></span></span>
+            <span class="settings-card-copy"><strong>My Profile</strong><small>Avatar, workspace name &amp; language</small></span>
+            <span class="settings-card-arrow ui-icon icon-mask icon-ui-chevron-right" aria-hidden="true"></span>
+          </button>
+          <button class="settings-card settings-card-categories" type="button" data-settings-view="categories">
+            <span class="settings-card-icon" aria-hidden="true"><span class="ui-icon icon-mask icon-ui-sliders" aria-hidden="true"></span></span>
+            <span class="settings-card-copy"><strong>Note Categories</strong><small>Shared categories for notes</small></span>
+            <span class="settings-card-arrow ui-icon icon-mask icon-ui-chevron-right" aria-hidden="true"></span>
+          </button>
+          <button class="settings-card settings-card-design" type="button" data-settings-view="design">
+            <span class="settings-card-icon" aria-hidden="true"><span class="ui-icon icon-mask icon-ui-sparkle" aria-hidden="true"></span></span>
+            <span class="settings-card-copy"><strong>Design</strong><small>Theme &amp; font size</small></span>
+            <span class="settings-card-arrow ui-icon icon-mask icon-ui-chevron-right" aria-hidden="true"></span>
+          </button>
+          <button class="settings-card settings-card-data" type="button" data-settings-view="data">
+            <span class="settings-card-icon" aria-hidden="true"><span class="ui-icon icon-mask icon-ui-download" aria-hidden="true"></span></span>
+            <span class="settings-card-copy"><strong>Data &amp; Backup</strong><small>Export, restore &amp; reset</small></span>
+            <span class="settings-card-arrow ui-icon icon-mask icon-ui-chevron-right" aria-hidden="true"></span>
+          </button>
+        </section>
+
+        <section class="settings-panel" data-settings-panel="profile" hidden>
+          <div class="workspace-editor"><div class="workspace-preview" id="workspacePreview">Q</div><div><label class="photo-upload">Choose workspace avatar<input id="workspacePhoto" type="file" accept="image/png,image/jpeg,image/webp"></label><button class="photo-remove" type="button" id="removeWorkspacePhoto" hidden>Remove</button></div></div>
+          <div class="settings-fields"><label>Workspace name<input id="workspaceName" maxlength="40" value="QUICK NOTES"></label><label>Language<select id="languageSetting"><option value="en">English</option><option value="ru">Русский</option></select></label></div>
+        </section>
+
+        <section class="settings-panel settings-category-panel" data-settings-panel="categories" hidden>
+          <div class="settings-heading settings-category-heading">
+            <div class="settings-category-intro"><p>Categories are shared by every student and group.</p><span class="settings-info"><button type="button" class="settings-info-btn" aria-label="About note categories" aria-describedby="settingsCategoryTip"><span class="ui-icon icon-mask icon-ui-info" aria-hidden="true"></span></button><span class="settings-info-popover" id="settingsCategoryTip" role="tooltip">Empty categories can be hidden in the workspace of a specific student or group using the eye button.</span></span></div>
+            <button class="secondary" type="button" id="addCategoryBtn">＋ Add category</button>
+          </div>
+          <div class="category-settings" id="categorySettings"></div>
+          <div class="category-icon-picker" id="categoryIconPicker" role="dialog" aria-label="Choose category icon" hidden></div>
+        </section>
+
+        <section class="settings-panel" data-settings-panel="design" hidden>
+          <div class="settings-fields"><label>Theme<select id="themeSetting"><option value="forest-night">Midnight Focus</option><option value="classic">Minimalism</option><option value="night-forest">Night Forest</option></select></label><label>Font size<select id="fontSizeSetting"><option value="standard">Standard</option><option value="large">Large</option><option value="extra">Extra large</option></select></label></div>
+        </section>
+
+        <section class="settings-panel" data-settings-panel="data" hidden>
+          <p class="settings-panel-copy">Keep a local copy of your workspace data.</p>
+          <div class="backup-actions"><button class="secondary" type="button" id="exportBackupBtn">Export backup</button><label class="secondary import-label">Restore backup<input type="file" id="importBackupInput" accept="application/json,.json"></label><button class="danger" type="button" id="resetBtn">Reset all data</button></div>
+        </section>
+      </div>
+
+      <div class="modal-actions settings-actions"><button class="secondary" type="button" data-close-dialog="settingsDialog">Cancel</button><button class="primary" id="saveSettingsBtn" value="default">Save settings</button></div>
+    </form>
+  </dialog>
+
+  <div class="lesson-overlay" id="lessonOverlay" hidden>
+    <section class="lesson-panel" role="dialog" aria-modal="true" aria-labelledby="lessonTitle">
+      <div class="lesson-head"><div><span class="live-dot"></span><div><h2 id="lessonTitle">Lesson mode</h2><p>Quick capture</p></div></div><button class="close" id="closeLessonBtn" aria-label="Close"><span class="ui-icon icon-mask icon-ui-close" aria-hidden="true"></span></button></div>
+      <form id="quickForm">
+        <div class="capture-target-field"><span class="capture-field-label">Student or group</span><div id="quickPersonPickerMount"></div></div><label id="quickAboutWrap" hidden>Note about<select id="quickAbout"></select></label>
+        <label>Category<select id="quickCategory"></select></label>
+        <label>Note<textarea id="quickText" rows="4" required maxlength="500" placeholder="Type an observation…"></textarea></label>
+        <button class="quick-add" type="submit">Add note <kbd>Ctrl ↵</kbd></button>
+      </form>
+      <div class="quick-confirm" id="quickConfirm" aria-live="polite">Ready for your next note</div>
+    </section>
+  </div>
+  <dialog id="webDemoDialog" class="modal web-demo-dialog">
+    <div class="confirm-content">
+      <p class="eyebrow">WEB DEMO</p>
+      <h2>Your data is stored in this browser</h2>
+      <p class="dialog-copy">Notes, students and photos may be lost if you clear this browser's site data. Use the desktop app for reliable storage on your computer.</p>
+      <div class="modal-actions demo-notice-actions"><button class="secondary" type="button" id="webDemoInstall">Install desktop app</button><button class="primary" type="button" id="continueWebDemo">Continue in web demo</button></div>
+    </div>
+  </dialog>
+  <dialog id="conceptDialog" class="modal dashboard-dialog">
+    <div class="dashboard-dialog-content"><div class="modal-head"><div><p class="eyebrow">WHY QUICK NOTES?</p><h2>Remember the person, not just the note</h2></div><button class="close" type="button" data-close-dialog="conceptDialog" aria-label="Close"><span class="ui-icon icon-mask icon-ui-close" aria-hidden="true"></span></button></div><p class="dialog-copy">Quick Notes keeps small observations connected to the right person, group and context — ready when you need them.</p><div class="concept-list"><article><b>Teachers</b><span>Remember errors, interests, progress and ideas for the next lesson.</span></article><article><b>Tutors &amp; coaches</b><span>Keep useful details from every meeting without building a complicated database.</span></article><article><b>Small teams</b><span>Capture group notes and personal follow-ups in the same workspace.</span></article><article><b>Your own system</b><span>Rename categories and use the structure for clients, projects or recurring meetings.</span></article></div></div>
+  </dialog>
+  <dialog id="guideDialog" class="modal dashboard-dialog guide-dialog">
+    <div class="dashboard-dialog-content"><div class="modal-head"><div><p class="eyebrow">HOW IT WORKS</p><h2>Simple, local and under your control</h2></div><button class="close" type="button" data-close-dialog="guideDialog" aria-label="Close"><span class="ui-icon icon-mask icon-ui-close" aria-hidden="true"></span></button></div><div class="guide-list"><article><span>01</span><div><b>Web demo</b><p>Try everything in the browser. Its data can disappear if browser site data is cleared, so export a backup if the notes matter.</p></div></article><article><span>02</span><div><b>Desktop app</b><p>The desktop version keeps its working data locally on your computer and remains usable without accounts or foreign cloud storage.</p></div></article><article><span>03</span><div><b>Moving notes</b><p>Click a note to edit it. Use its three-dot menu for Move to… or Delete; both actions stay close to the note without adding extra icons.</p></div></article><article><span>04</span><div><b>Deleting groups and categories</b><p>Open the profile menu to edit or delete a group. Categories are managed in Settings; notes can be moved elsewhere or deleted with the category.</p></div></article><article><span>05</span><div><b>Backups</b><p>Use Export backup before clearing browser data or moving to another computer. Restore backup returns that saved copy.</p></div></article></div></div>
+  </dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <button class="floating-add" id="floatingAddNote" hidden>＋ Add note</button>
+  <script src="src/core/storage.js"></script>
+  <script src="src/core/release-config.js"></script>
+  <script src="src/core/translations.js"></script>
+  <script src="src/core/i18n.js"></script>
+  <script src="src/core/router.js"></script>
+  <script src="src/ui/icons.js"></script>
+  <script src="src/ui/category-icons.js"></script>
+  <script src="src/ui/tooltip.js"></script>
+  <script src="src/ui/components.js"></script>
+  <script src="src/ui/todo.js"></script>
+  <script src="src/ui/lesson-mode.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

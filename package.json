@@ -1,0 +1,58 @@
+{
+  "name": "quick-notes",
+  "productName": "QUICK NOTES",
+  "version": "1.0.1",
+  "description": "Local-first desktop notes and task board.",
+  "private": true,
+  "main": "desktop/main.cjs",
+  "scripts": {
+    "desktop": "electron .",
+    "dist:win": "electron-builder --win nsis --x64",
+    "dist:dir": "electron-builder --dir --win --x64"
+  },
+  "devDependencies": {
+    "electron": "43.4.0",
+    "electron-builder": "26.15.3"
+  },
+  "build": {
+    "appId": "com.quicknotes.desktop",
+    "productName": "QUICK NOTES",
+    "asar": true,
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "app.js",
+      "index.html",
+      "styles.css",
+      "assets/icons/**/*",
+      "assets/themes/**/*",
+      "src/**/*",
+      "styles/**/*",
+      "desktop/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "artifactName": "Quick-Notes-Setup.${ext}",
+      "icon": "assets/icons/app-icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "QUICK NOTES",
+      "deleteAppDataOnUninstall": false,
+      "installerIcon": "assets/icons/app-icon.ico",
+      "uninstallerIcon": "assets/icons/app-icon.ico"
+    }
+  }
+}

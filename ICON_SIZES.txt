@@ -1,0 +1,18 @@
+QUICK NOTES — ICON SIZE CONTROLS
+
+Edit ONLY these five values in styles/tokens.css:
+
+--icon-size-small: 16px;
+--icon-size-ui: 20px;
+--icon-size-sidebar: 22px;
+--icon-size-category: 22px;
+--icon-size-feature: 27px;
+
+small    = compact controls (close, arrows, small settings icons)
+ui       = normal interface icons
+sidebar  = sidebar/navigation icons
+category = category icons
+feature  = large dashboard/settings icons
+
+SVG replacement changes shape only. Theme colours are not controlled here and remain unchanged.
+After replacing SVG files, run UPDATE_ICONS.bat and refresh Chrome.

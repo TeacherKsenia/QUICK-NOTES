@@ -1,0 +1,1145 @@
+/*
+ * Shared layout contract.
+ *
+ * Geometry belongs here rather than in theme blocks. The declarations below
+ * intentionally reproduce the approved computed values from the visual
+ * baseline; they do not redesign the interface.
+ */
+.sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  width: var(--layout-sidebar-width);
+  z-index: var(--z-sidebar);
+}
+
+#workspaceSidebarContent {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+  flex-direction: column;
+}
+
+#peopleNav {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  height: var(--layout-topbar-height);
+  z-index: var(--z-topbar);
+  isolation: isolate;
+}
+
+.top-actions {
+  margin-left: auto;
+}
+
+.content {
+  max-width: var(--layout-content-max-width);
+}
+
+/* Notes page vertical rhythm. Keep the shared topbar untouched and lift the
+   whole Notes canvas (profile + filters + cards) as one unit by controlling
+   only the page container's top inset. Sidebar/scroll changes must not own
+   this value. */
+#content {
+  --notes-page-top-inset: 14px;
+  padding-top: var(--notes-page-top-inset);
+}
+
+.category-filter {
+  position: sticky;
+  top: var(--layout-sticky-filter-top);
+  z-index: var(--z-sticky-filter);
+  isolation: isolate;
+}
+
+.floating-add {
+  position: fixed;
+  right: var(--layout-floating-inline);
+  bottom: var(--layout-floating-block);
+  z-index: var(--z-floating);
+}
+
+.workspace {
+  grid-column: 2;
+  min-width: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* Shared structural host for themes that use a full-viewport photo layer. */
+.has-photo-background {
+  position: relative;
+}
+
+.has-photo-background::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.has-photo-background .app-shell {
+  position: relative;
+  z-index: 1;
+}
+/* To Do has its own layout rhythm. Notes' .category-filter is intentionally
+   sticky; To Do's .filter-bar is intentionally normal-flow so future tools
+   added here never inherit the Notes sticky/header surface by accident.
+   All vertical spacing lives on the To Do page/container instead of being
+   simulated with transforms or negative margins. */
+.todo-content{
+  --todo-focus-width:720px;
+  --todo-gap-title-capture:10px;
+  --todo-gap-capture-filter:14px;
+  --todo-gap-filter-board:18px;
+  --todo-page-top-inset:12px;
+  --todo-page-bottom-inset:38px;
+  padding-top:var(--todo-page-top-inset);
+  padding-bottom:var(--todo-page-bottom-inset);
+}
+.todo-title{margin:0 0 var(--todo-gap-title-capture);padding-top:0}
+.todo-capture-row{display:grid;grid-template-columns:minmax(0,var(--todo-focus-width)) minmax(120px,1fr);align-items:stretch;gap:18px;margin-bottom:var(--todo-gap-capture-filter)}
+.todo-capture{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:11px}
+.todo-decoration-slot{min-width:0;pointer-events:none}
+.todo-status-filter{width:max-content;max-width:100%;margin-bottom:var(--todo-gap-filter-board)}
+.todo-board-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:start;gap:13px}
+.todo-board-grid.single{grid-template-columns:minmax(0,var(--todo-focus-width))}
+
+@media (max-width:1100px){.todo-board-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.todo-board-grid .todo-board:last-child{grid-column:1/-1}}
+@media (max-width:760px){.todo-board-grid{grid-template-columns:1fr}.todo-board-grid .todo-board:last-child{grid-column:auto}.todo-capture-row{grid-template-columns:1fr}.todo-decoration-slot{display:none}.todo-capture{grid-template-columns:auto minmax(0,1fr)}.todo-capture-hint{display:none}}
+
+.has-photo-background .workspace {
+  position: relative;
+  min-height: 100vh;
+}
+
+.has-photo-background .workspace::before {
+  display: none;
+}
+
+/* Photo themes must not demote the shared sticky topbar to position:relative.
+   Only normal workspace children need the local stacking context. */
+.has-photo-background .workspace > *:not(.topbar) {
+  position: relative;
+  z-index: 1;
+}
+
+.has-photo-background .workspace > .topbar {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-topbar);
+}
+
+.has-photo-background .content {
+  min-height: calc(100vh - 73px);
+}
+
+@media (max-width: 760px) {
+  :root {
+    --layout-page-gutter: 18px;
+    --layout-floating-inline: 18px;
+    --layout-floating-block: 18px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Scroll system
+   --------------------------------------------------------------------------
+   One quiet scrollbar language for the whole app. Scroll behavior remains
+   owned by each component; these rules only standardize the visual treatment.
+   Internal sidebar regions reserve the tiny gutter so content never shifts
+   sideways when a scrollbar appears.
+*/
+:root{
+  --scrollbar-size:4px;
+  --scrollbar-thumb:rgba(67,82,77,.14);
+  --scrollbar-thumb-hover:rgba(67,82,77,.34);
+  --scrollbar-thumb-dark:rgba(255,255,255,.13);
+  --scrollbar-thumb-dark-hover:rgba(255,255,255,.30);
+}
+
+html,
+body,
+*{
+  scrollbar-width:thin;
+  scrollbar-color:var(--scrollbar-thumb) transparent;
+}
+
+*::-webkit-scrollbar{
+  width:var(--scrollbar-size);
+  height:var(--scrollbar-size);
+}
+*::-webkit-scrollbar-track{background:transparent}
+*::-webkit-scrollbar-thumb{
+  background:var(--scrollbar-thumb);
+  border-radius:999px;
+}
+*:hover::-webkit-scrollbar-thumb{background:var(--scrollbar-thumb-hover)}
+
+/* Dark navigation has its own low-contrast thumb. */
+.sidebar,
+.sidebar *{
+  scrollbar-color:var(--scrollbar-thumb-dark) transparent;
+}
+.sidebar::-webkit-scrollbar-thumb,
+.sidebar *::-webkit-scrollbar-thumb{background:var(--scrollbar-thumb-dark)}
+.sidebar:hover::-webkit-scrollbar-thumb,
+.sidebar *:hover::-webkit-scrollbar-thumb{background:var(--scrollbar-thumb-dark-hover)}
+
+/* Notes: only the people/group list scrolls. Search and Add student stay fixed. */
+#peopleNav{
+  scrollbar-gutter:stable;
+  padding-right:4px;
+}
+
+/* To Do: system views stay fixed; only the user's own lists can grow/scroll. */
+#todoSidebarContent{
+  display:flex;
+  flex:1 1 auto;
+  min-height:0;
+  flex-direction:column;
+  overflow:hidden;
+}
+#todoNav{flex:0 0 auto}
+#todoSidebarContent .todo-list-nav{
+  display:flex;
+  flex:1 1 auto;
+  min-height:0;
+  flex-direction:column;
+  overflow:hidden;
+}
+#todoCustomLists{
+  flex:1 1 auto;
+  min-height:0;
+  overflow-x:hidden;
+  overflow-y:auto;
+  scrollbar-gutter:stable;
+  padding-right:4px;
+}
+
+
+/* ============================================================
+   To Do alignment contract (V12)
+   - Title stays in the shared top band with the sidebar brand and top-right tools.
+   - The capture row starts on the same horizontal line as the first task-nav item.
+   - The shared topbar remains visible above the page, so Settings/Lesson Mode
+     never disappear behind To Do content.
+   ============================================================ */
+body.todo-mode .workspace{
+  position:relative;
+}
+body.todo-mode .workspace > .topbar,
+body.todo-mode.has-photo-background .workspace > .topbar{
+  position:absolute;
+  inset:0 0 auto 0;
+  z-index:var(--z-topbar);
+  background:transparent;
+  border-bottom:0;
+  backdrop-filter:none;
+  box-shadow:none;
+}
+body.todo-mode .todo-content{
+  --todo-page-top-inset:27px;
+  --todo-gap-title-capture:57px;
+  position:relative;
+  z-index:1;
+}
+
+/* ============================================================
+   TO DO BOARD 2.0 — shared geometry (V15 2.0)
+   Themes may recolour these structures, never reposition them.
+   ============================================================ */
+body.todo-mode .workspace > .topbar,
+body.todo-mode.has-photo-background .workspace > .topbar{
+  position:sticky;
+  inset:auto;
+  top:0;
+  background:var(--sticky-topbar-surface);
+  border-bottom:1px solid var(--sticky-divider);
+  backdrop-filter:blur(12px);
+  box-shadow:none;
+}
+body.todo-mode .todo-content{
+  --todo-page-top-inset:18px;
+  --todo-gap-title-capture:0px;
+  padding-top:var(--todo-page-top-inset);
+}
+body.todo-mode #lessonBtn{display:none}
+#todoSidebarContent{padding-top:0}
+#todoSidebarContent .todo-search{flex:0 0 auto}
+#todoNav{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;padding-right:4px}
+.todo-nav-divider{display:block;height:14px}
+.todo-page-head{display:flex;align-items:flex-start;justify-content:space-between;gap:22px;margin-bottom:22px}
+.todo-create-actions{display:flex;align-items:center;gap:9px}
+.todo-view-tools{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:14px;min-height:38px}
+.todo-view-heading h2{margin:0;font-size:18px}.todo-view-heading small{display:block;margin-top:3px}
+.todo-view-actions{display:flex;align-items:center;gap:8px}.todo-view-actions select{min-height:36px}
+.todo-board-grid{display:block}
+.todo-planner-spread{display:grid;grid-template-columns:minmax(0,2fr) minmax(250px,.86fr);gap:18px;align-items:start}
+.todo-lists-zone,.todo-tasks-zone{min-width:0}
+.todo-zone-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
+.todo-zone-head h2{margin:0;font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+.todo-list-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;align-items:start}
+.todo-library-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.todo-list-card{position:relative;display:flex;min-width:0;min-height:218px;flex-direction:column;overflow:visible;border-radius:var(--radius-card);cursor:pointer}
+.todo-list-card.compact{min-height:176px}
+.todo-list-card>header{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;align-items:start;gap:9px;padding:15px 15px 9px}
+.todo-list-card-icon{display:grid;width:35px;height:35px;place-items:center;border-radius:10px}.todo-list-card-icon .ui-icon{width:var(--icon-size-ui);height:var(--icon-size-ui)}
+.todo-list-card-title{min-width:0}.todo-list-card-title h3{margin:1px 0 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:15px}.todo-list-card-title time{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px}.todo-list-card-title time .ui-icon{width:var(--icon-size-small);height:var(--icon-size-small)}
+.todo-pin-mark{display:grid;width:26px;height:26px;place-items:center}.todo-pin-mark .ui-icon{width:var(--icon-size-small);height:var(--icon-size-small)}
+.todo-card-menu-wrap,.todo-task-menu-wrap{position:relative}.todo-card-menu-wrap>.more-btn,.todo-task-menu-wrap>.more-btn{width:28px;height:28px}
+.todo-object-menu{right:0;top:31px;width:170px}
+.todo-list-preview{flex:1;padding:2px 15px 10px}.todo-preview-task{display:grid;grid-template-columns:16px minmax(0,1fr);gap:7px;align-items:start;padding:5px 0}.todo-preview-task p{margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px}.todo-preview-task.completed p{text-decoration:line-through;opacity:.58}
+.todo-list-card>footer{display:flex;align-items:center;gap:9px;padding:10px 15px 13px;font-size:11px}.todo-list-card>footer>span:first-child{white-space:nowrap}.todo-progress{height:4px;flex:1;overflow:hidden;border-radius:999px}.todo-progress i{display:block;height:100%;border-radius:inherit}
+.todo-task-column{display:flex;flex-direction:column;gap:8px}
+.todo-standalone-row{position:relative;display:grid;grid-template-columns:36px minmax(0,1fr) auto auto auto;align-items:center;gap:6px;min-height:54px;padding:8px 9px 8px 5px;border-radius:13px}.todo-standalone-row .todo-task-check{width:36px;height:36px}.todo-inline-task-text{min-width:0;border:0;background:transparent;padding:5px 3px;text-align:left;cursor:text;overflow-wrap:anywhere}.todo-standalone-row time{font-size:11px;white-space:nowrap}.todo-task-source{grid-column:2;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.todo-standalone-row:has(.todo-task-source){grid-template-rows:auto auto}.todo-standalone-row:has(.todo-task-source) .todo-task-star,.todo-standalone-row:has(.todo-task-source) .todo-task-menu-wrap,.todo-standalone-row:has(.todo-task-source)>time{grid-row:1/3}
+.todo-task-library{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.todo-task-library.focus{max-width:920px}
+.todo-zone-empty{min-height:110px;display:grid;place-items:center;text-align:center;border-radius:var(--radius-card);padding:22px}
+.bulk-toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}.bulk-toolbar strong{margin-right:auto}.bulk-check{display:grid;width:30px;height:30px;place-items:center;border-radius:9px}.bulk-check>span{display:grid;width:17px;height:17px;place-items:center;border-radius:5px}
+.todo-list-card.selectable{cursor:pointer}.todo-list-card.selectable>header{padding-left:48px}.todo-list-card.selectable>.bulk-check{position:absolute;left:12px;top:13px;z-index:2}
+.todo-standalone-row.selectable{grid-template-columns:36px minmax(0,1fr) auto}.todo-standalone-row.selectable .bulk-check{width:36px;height:36px}
+.todo-open-list{max-width:900px;margin:0 auto;padding-bottom:30px}.todo-open-list-nav{margin-bottom:10px}.todo-back{border:0;background:transparent;padding:5px 0;cursor:pointer;font-weight:700}.todo-open-list-card{overflow:visible;border-radius:20px}.todo-open-list-head{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto auto auto;align-items:center;gap:8px;padding:17px 18px 13px}.todo-open-icon{display:grid;width:40px;height:40px;place-items:center;border-radius:11px}.todo-open-icon .ui-icon{width:var(--icon-size-ui);height:var(--icon-size-ui)}.todo-open-title{min-width:0;border:0;background:transparent;padding:5px 2px;text-align:left;font-size:22px;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:text}.todo-date-button{display:flex;align-items:center;gap:6px;min-height:36px;padding:0 10px;border-radius:9px;cursor:pointer}.todo-date-button .ui-icon{width:var(--icon-size-small);height:var(--icon-size-small)}.todo-open-progress{display:flex;align-items:center;gap:10px;padding:0 18px 12px;font-size:11px}.todo-open-progress>i{height:4px;flex:1;overflow:hidden;border-radius:999px}.todo-open-progress b{display:block;height:100%;border-radius:inherit}
+.todo-list-task-rows{padding:2px 13px 0}.todo-list-task-row{display:grid;grid-template-columns:25px 38px minmax(0,1fr) 34px 30px;align-items:center;gap:3px;min-height:49px;border-radius:11px}.todo-task-drag{width:25px;height:32px;border:0;background:transparent;cursor:grab;opacity:0}.todo-list-task-row:hover .todo-task-drag,.todo-task-drag:focus-visible{opacity:.55}.todo-list-task-row.dragging{opacity:.45}.todo-list-task-row.drag-over{transform:translateY(2px)}.todo-list-task-row .todo-task-check{width:38px;height:38px}.todo-list-task-row .todo-inline-task-text{padding:8px 4px}.todo-list-task-row.completed .todo-inline-task-text{text-decoration:line-through;opacity:.55}.todo-inline-editor{width:100%;min-height:36px;resize:none;border-radius:8px;padding:7px 8px;font:inherit}
+.todo-new-task-row{display:grid;grid-template-columns:38px minmax(0,1fr) auto;align-items:start;gap:3px;margin:5px 13px 14px;padding:8px 4px;border-radius:11px}.todo-new-task-row>.todo-task-dot{margin:12px auto}.todo-new-task-row textarea{width:100%;min-height:38px;max-height:110px;resize:vertical;border:0;background:transparent;padding:8px 4px;outline:0;font:inherit}.todo-new-task-row small{align-self:center;opacity:0;transition:opacity .15s}.todo-new-task-row:focus-within small{opacity:.72}
+
+/* Notes bulk cleanup shares the same explicit library-cleanup pattern. */
+.notes-cleanup-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.note-cleanup-card{display:grid;grid-template-columns:34px minmax(0,1fr);align-items:start;gap:8px;min-height:112px;padding:14px;border-radius:14px;text-align:left;cursor:pointer}.note-cleanup-copy{min-width:0}.note-cleanup-copy b{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}.note-cleanup-copy small{display:block;margin-top:10px}.note-bulk-toggle{padding-inline:12px}
+
+@media (max-width:1180px){.todo-library-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.todo-planner-spread{grid-template-columns:minmax(0,1.6fr) minmax(240px,.8fr)}.notes-cleanup-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:900px){.todo-planner-spread{grid-template-columns:1fr}.todo-task-library{grid-template-columns:1fr}.todo-tasks-zone{max-width:none}.todo-open-list{max-width:none}.todo-open-list-head{grid-template-columns:auto minmax(0,1fr) auto auto}.todo-date-button{grid-column:1/3;grid-row:2}.todo-list-sort,.todo-open-pin{grid-row:2}.todo-list-grid{grid-template-columns:1fr}}
+@media (max-width:650px){.todo-page-head{display:block}.todo-create-actions{margin-top:12px}.todo-library-grid,.notes-cleanup-grid{grid-template-columns:1fr}.todo-view-tools{align-items:flex-start;flex-direction:column}.todo-open-list-head{grid-template-columns:auto minmax(0,1fr) auto}.todo-date-button{grid-column:1/3}.todo-list-sort,.todo-open-pin{grid-row:auto}.todo-open-list-head>.todo-card-menu-wrap{grid-column:3}}
+.todo-margin-zone{display:flex;flex-direction:column;gap:15px}.todo-margin-block{min-width:0}.todo-margin-empty{min-height:54px;display:flex;align-items:center;padding:10px 11px;border-radius:12px;font-size:12px}
+
+/* ============================================================
+   TO DO BOARD V16 — Current planner reference geometry
+   Desktop reference: 1920×922. Small optical nudges are allowed,
+   but the relationships below stay consistent across themes.
+   ============================================================ */
+.todo-topbar-title{display:none;margin:0;font-size:48px;line-height:1;font-weight:850;letter-spacing:.02em}
+body.todo-mode .todo-topbar-title{display:block}
+body.todo-mode .workspace-context{display:none!important}
+body.todo-mode .topbar{padding-left:42px;padding-right:42px}
+body.todo-mode .todo-content{max-width:none;margin:0;padding:0 42px 54px}
+body.todo-mode .todo-page-head{min-height:116px;margin:0 0 22px;display:flex;align-items:center;justify-content:center}
+body.todo-mode .todo-page-head>div:first-child{display:none}
+body.todo-mode .todo-create-actions{display:flex;align-items:center;justify-content:center;gap:32px}
+body.todo-mode .todo-create-actions>button{width:307px;min-height:82px;padding:0 24px;border-radius:15px;font-size:28px;font-weight:600;line-height:1}
+body.todo-mode .todo-view-tools:empty{display:none}
+body.todo-mode .todo-view-tools:empty + .todo-board-grid{margin-top:0}
+
+/* Current = planner page. Left: three list pockets. Right: Focus margin. */
+.todo-current-board{display:grid;grid-template-columns:minmax(0,3fr) minmax(300px,1fr);gap:42px;align-items:start;width:100%}
+.todo-current-board.no-focus{grid-template-columns:minmax(0,1fr)}
+.todo-current-left{display:flex;min-width:0;flex-direction:column;gap:12px}
+.todo-current-section,.todo-current-focus{min-width:0}
+.todo-current-section-head{display:flex;height:30px;align-items:center;gap:8px;margin:0 0 8px;padding-left:8px}
+.todo-current-section-head h2{margin:0;font-size:21px;line-height:28px;font-weight:800;letter-spacing:.015em;text-transform:uppercase}
+.todo-current-section-icon{display:grid;width:26px;height:26px;flex:0 0 26px;place-items:center;border-radius:8px}
+.todo-current-section-icon .ui-icon{width:var(--icon-size-ui);height:var(--icon-size-ui)}
+.todo-current-pocket,.todo-current-focus-pocket{box-sizing:border-box;padding:12px;border-radius:28px}
+.todo-current-pocket{max-width:100%}
+.todo-current-section.items-1 .todo-current-pocket{width:calc(33.333% + 2.667px)}
+.todo-current-section.items-2 .todo-current-pocket{width:calc(66.666% + 1.333px)}
+.todo-current-section.items-3 .todo-current-pocket{width:100%}
+.todo-current-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.todo-current-section.items-1 .todo-current-cards{grid-template-columns:minmax(0,1fr)}
+.todo-current-section.items-2 .todo-current-cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+.todo-current-board .todo-list-card.compact{height:148px;min-height:148px;border-radius:22px}
+.todo-current-board .todo-list-card.compact>header{gap:8px;padding:11px 12px 5px}
+.todo-current-board .todo-list-card.compact .todo-list-card-icon{width:32px;height:32px;border-radius:9px}
+.todo-current-board .todo-list-card.compact .todo-list-card-title h3{font-size:14px}
+.todo-current-board .todo-list-card.compact .todo-list-preview{padding:0 12px 4px}
+.todo-current-board .todo-list-card.compact .todo-preview-task{padding:3px 0}
+.todo-current-board .todo-list-card.compact .todo-preview-task p{font-size:12px}
+.todo-current-board .todo-list-card.compact>footer{padding:6px 12px 9px;font-size:10px}
+.todo-current-board .todo-list-card.compact .todo-list-empty-preview{font-size:12px}
+
+/* Focus margin: content-driven height; never reserve empty card slots. */
+.todo-current-focus{width:100%}
+.todo-current-focus-pocket{width:100%}
+.todo-current-focus .todo-task-column{gap:12px}
+.todo-current-focus .todo-standalone-row{min-height:96px;border-radius:20px;padding:11px 11px 11px 7px}
+.todo-current-focus .todo-inline-task-text{font-size:14px;font-weight:650}
+.todo-current-focus .todo-task-source{font-size:11px}
+.todo-current-focus .todo-task-check{width:38px;height:38px}
+
+/* Keep the Current page compact vertically like the supplied planner mockup. */
+.todo-current-pinned,.todo-current-deadline,.todo-current-recent{margin:0}
+.todo-current-empty{max-width:520px}
+
+/* Navigation hierarchy: working views, then library views. */
+#todoNav .todo-nav-divider{height:28px}
+
+@media (max-width:1450px){
+  body.todo-mode .todo-content{padding-left:34px;padding-right:34px}
+  body.todo-mode .topbar{padding-left:34px;padding-right:34px}
+  .todo-current-board{grid-template-columns:minmax(0,2.7fr) minmax(285px,1fr);gap:30px}
+  body.todo-mode .todo-create-actions>button{width:280px;min-height:76px;font-size:25px}
+  .todo-current-cards{gap:16px}
+  .todo-current-section.items-1 .todo-current-pocket{width:calc(33.333% + 5.333px)}
+  .todo-current-section.items-2 .todo-current-pocket{width:calc(66.666% + 2.667px)}
+}
+@media (max-width:1120px){
+  .todo-current-board{grid-template-columns:1fr}
+  .todo-current-focus{max-width:520px}
+  .todo-current-section.items-1 .todo-current-pocket{width:calc(50% - 8px)}
+  .todo-current-section.items-2 .todo-current-pocket{width:100%}
+  .todo-current-section.items-3 .todo-current-cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .todo-current-section.items-3 .todo-current-pocket{width:100%}
+}
+@media (max-width:760px){
+  body.todo-mode .todo-topbar-title{font-size:32px}
+  body.todo-mode .todo-content{padding-left:16px;padding-right:16px}
+  body.todo-mode .topbar{padding-left:16px;padding-right:16px}
+  body.todo-mode .todo-page-head{min-height:auto;padding:16px 0 20px}
+  body.todo-mode .todo-create-actions{width:100%;gap:10px}
+  body.todo-mode .todo-create-actions>button{width:50%;min-height:58px;font-size:17px}
+  .todo-current-section.items-1 .todo-current-pocket,.todo-current-section.items-2 .todo-current-pocket,.todo-current-section.items-3 .todo-current-pocket{width:100%}
+  .todo-current-cards,.todo-current-section.items-2 .todo-current-cards,.todo-current-section.items-3 .todo-current-cards{grid-template-columns:1fr}
+  .todo-current-board .todo-list-card.compact{height:auto;min-height:148px}
+}
+
+/* ============================================================
+   TO DO BOARD V17 — shared browser geometry
+   Uses the same content/topbar contract as the rest of QUICK NOTES.
+   Current is compact enough to show Pinned + Deadline + Recent at once.
+   ============================================================ */
+body.todo-mode .todo-content{
+  max-width:var(--layout-content-max-width);
+  margin:0 auto;
+  padding:0 42px 46px;
+}
+body.todo-mode .topbar{
+  padding-right:max(42px,calc((100% - var(--layout-content-max-width))/2 + 42px));
+  padding-left:max(42px,calc((100% - var(--layout-content-max-width))/2 + 42px));
+}
+body.todo-mode .todo-page-head{
+  min-height:86px;
+  margin:0 0 10px;
+}
+body.todo-mode .todo-create-actions{gap:24px}
+body.todo-mode .todo-create-actions>button{
+  width:clamp(220px,22vw,270px);
+  min-height:60px;
+  padding:0 22px;
+  border-radius:14px;
+  font-size:20px;
+  font-weight:700;
+  line-height:1;
+}
+
+/* Current planner page: shared grid, not viewport-specific absolute sizing. */
+.todo-current-board{
+  grid-template-columns:minmax(0,3fr) minmax(260px,.94fr);
+  gap:30px;
+}
+.todo-current-left{gap:6px}
+.todo-current-section-head{
+  height:26px;
+  gap:7px;
+  margin:0 0 4px;
+  padding-left:6px;
+}
+.todo-current-section-head h2{
+  font-size:16px;
+  line-height:22px;
+  font-weight:800;
+  letter-spacing:.45px;
+  text-transform:uppercase;
+}
+.todo-current-section-icon{
+  width:24px;
+  height:24px;
+  flex-basis:24px;
+  border-radius:8px;
+}
+.todo-current-section-icon .ui-icon{width:var(--icon-size-ui);height:var(--icon-size-ui)}
+.todo-current-pocket,.todo-current-focus-pocket{
+  padding:9px;
+  border-radius:22px;
+}
+.todo-current-cards{gap:14px}
+.todo-current-section.items-1 .todo-current-pocket{width:calc(33.333% + 4.667px)}
+.todo-current-section.items-2 .todo-current-pocket{width:calc(66.666% + 2.333px)}
+.todo-current-section.items-3 .todo-current-pocket{width:100%}
+
+/* Current cards are compact previews: at most 2 tasks, then progress immediately. */
+.todo-current-board .todo-list-card.compact{
+  height:116px;
+  min-height:116px;
+  border-radius:18px;
+}
+.todo-current-board .todo-list-card.compact>header{
+  gap:7px;
+  padding:8px 10px 3px;
+}
+.todo-current-board .todo-list-card.compact .todo-list-card-icon{
+  width:28px;
+  height:28px;
+  border-radius:8px;
+}
+.todo-current-board .todo-list-card.compact .todo-list-card-icon .ui-icon{width:var(--icon-size-ui);height:var(--icon-size-ui)}
+.todo-current-board .todo-list-card.compact .todo-list-card-title h3{font-size:13px;line-height:17px}
+.todo-current-board .todo-list-card.compact .todo-list-card-title time{margin-top:1px;font-size:9.5px}
+.todo-current-board .todo-list-card.compact .todo-pin-mark{width:23px;height:23px}
+.todo-current-board .todo-list-card.compact .todo-card-menu-wrap>.more-btn{width:24px;height:24px}
+.todo-current-board .todo-list-card.compact .todo-list-preview{
+  flex:1;
+  min-height:0;
+  padding:0 10px 1px;
+}
+.todo-current-board .todo-list-card.compact .todo-preview-task{
+  grid-template-columns:13px minmax(0,1fr);
+  gap:5px;
+  padding:1px 0;
+}
+.todo-current-board .todo-list-card.compact .todo-preview-task p{font-size:11px;line-height:15px}
+.todo-current-board .todo-list-card.compact .todo-list-empty-preview{margin:5px 0 0;font-size:11px}
+.todo-current-board .todo-list-card.compact>footer{
+  gap:7px;
+  padding:2px 10px 7px;
+  font-size:9.5px;
+  line-height:12px;
+}
+.todo-current-board .todo-list-card.compact .todo-progress{height:3px}
+
+/* Empty Current section = a thin folded hint, about half a regular pocket. */
+.todo-current-section.is-empty .todo-current-pocket,
+.todo-current-focus.is-empty .todo-current-focus-pocket{
+  width:min(100%,310px);
+  min-height:48px;
+  padding:7px 9px;
+}
+.todo-current-folded-empty{
+  min-height:32px;
+  display:flex;
+  align-items:center;
+  padding:0 12px;
+  border-radius:14px;
+  font-size:11px;
+}
+
+/* Focus stays compact and content-driven. */
+.todo-current-focus .todo-task-column{gap:8px}
+.todo-current-focus .todo-standalone-row{
+  min-height:72px;
+  border-radius:17px;
+  padding:8px 8px 8px 5px;
+}
+.todo-current-focus .todo-inline-task-text{font-size:12px;font-weight:650}
+.todo-current-focus .todo-task-source{font-size:10px}
+.todo-current-focus .todo-task-check{width:34px;height:34px}
+
+/* Mixed views use the same skeleton and collapse absent object types. */
+.todo-planner-spread.lists-only,.todo-planner-spread.tasks-only{grid-template-columns:1fr}
+.todo-planner-spread.lists-only .todo-lists-zone{width:100%}
+.todo-planner-spread.tasks-only .todo-tasks-zone{width:100%}
+.todo-view-title-line{display:flex;align-items:center;gap:8px}
+.todo-view-heading-icon{display:grid;width:28px;height:28px;place-items:center;border-radius:9px}
+.todo-view-heading-icon .ui-icon{width:var(--icon-size-ui);height:var(--icon-size-ui)}
+
+/* Library navigation group separation. */
+#todoNav .todo-nav-divider{height:30px}
+
+@media (max-width:1180px){
+  body.todo-mode .todo-content{padding-left:34px;padding-right:34px}
+  body.todo-mode .topbar{padding-left:34px;padding-right:34px}
+  .todo-current-board{grid-template-columns:minmax(0,2.55fr) minmax(240px,.9fr);gap:22px}
+  body.todo-mode .todo-create-actions>button{width:clamp(205px,23vw,245px);min-height:56px;font-size:18px}
+  .todo-current-cards{gap:11px}
+}
+@media (max-width:900px){
+  body.todo-mode .todo-content{padding-left:19px;padding-right:19px}
+  body.todo-mode .topbar{padding-left:16px;padding-right:16px}
+  .todo-current-board{grid-template-columns:1fr}
+  .todo-current-focus{max-width:none}
+  .todo-current-section.items-1 .todo-current-pocket{width:calc(50% - 5.5px)}
+  .todo-current-section.items-2 .todo-current-pocket{width:100%}
+  .todo-current-section.items-3 .todo-current-cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:650px){
+  body.todo-mode .todo-content{padding-left:14px;padding-right:14px;padding-bottom:30px}
+  body.todo-mode .todo-page-head{min-height:auto;padding:12px 0 14px;margin-bottom:4px}
+  body.todo-mode .todo-create-actions{gap:10px}
+  body.todo-mode .todo-create-actions>button{width:50%;min-height:52px;font-size:16px}
+  .todo-current-section.items-1 .todo-current-pocket,.todo-current-section.items-2 .todo-current-pocket,.todo-current-section.items-3 .todo-current-pocket{width:100%}
+  .todo-current-cards,.todo-current-section.items-2 .todo-current-cards,.todo-current-section.items-3 .todo-current-cards{grid-template-columns:1fr}
+  .todo-current-board .todo-list-card.compact{height:auto;min-height:112px}
+}
+
+/* ============================================================
+   TO DO BOARD V18 — shared view shell
+   Keep the Notes workspace geometry as the source of truth. These rules do
+   not alter sidebar width, content max-width, page gutter or breakpoints.
+   ============================================================ */
+body.todo-mode .todo-content{
+  max-width:var(--layout-content-max-width);
+  margin:0 auto;
+  padding-left:var(--layout-page-gutter);
+  padding-right:var(--layout-page-gutter);
+  padding-bottom:42px;
+}
+body.todo-mode .topbar{
+  padding-left:max(var(--layout-page-gutter),calc((100% - var(--layout-content-max-width))/2 + var(--layout-page-gutter)));
+  padding-right:max(var(--layout-page-gutter),calc((100% - var(--layout-content-max-width))/2 + var(--layout-page-gutter)));
+}
+
+/* Primary actions: clearly stronger than Settings, but never dominate the page. */
+body.todo-mode .todo-page-head{
+  min-height:72px;
+  margin:0 0 6px;
+}
+body.todo-mode .todo-create-actions{gap:22px}
+body.todo-mode .todo-create-actions>button{
+  width:clamp(210px,20vw,248px);
+  min-height:54px;
+  padding:0 20px;
+  border-radius:var(--radius-control);
+  font-size:17px;
+  font-weight:var(--font-weight-bold);
+}
+
+/* Every non-Current tab uses this same top row. Its vertical rhythm matches a
+   Current section heading, preventing the content from jumping between tabs. */
+.todo-view-tools{
+  min-height:29px;
+  margin-bottom:5px;
+  align-items:center;
+}
+.todo-view-title-line,
+.todo-current-section-head{
+  display:flex;
+  min-height:29px;
+  height:auto;
+  align-items:center;
+  gap:10px;
+  margin:0 0 5px;
+  padding:0;
+}
+.todo-view-heading-icon,
+.todo-current-section-icon{
+  display:grid;
+  width:29px;
+  height:29px;
+  flex:0 0 29px;
+  place-items:center;
+  border-radius:9px;
+}
+.todo-view-heading-icon .ui-icon,
+.todo-current-section-icon .ui-icon{width:var(--icon-size-ui);height:var(--icon-size-ui)}
+
+/* Mixed views share exactly the same left/right skeleton as Current. */
+.todo-planner-spread,
+.todo-current-board{
+  grid-template-columns:minmax(0,3fr) minmax(260px,.94fr);
+  gap:30px;
+  align-items:start;
+  width:100%;
+}
+.todo-planner-spread.lists-only,
+.todo-planner-spread.tasks-only{grid-template-columns:1fr}
+.todo-zone-head{display:none}
+
+/* Shared outer shell keeps every view on the same workspace origin. */
+.todo-view-shell{width:100%;min-width:0}
+.todo-view-shell>.todo-list-grid,
+.todo-view-shell>.todo-task-library,
+.todo-view-shell>.todo-planner-spread,
+.todo-view-shell>.todo-current-board{margin:0}
+
+/* Current keeps the compact preview variant; full library views keep the
+   existing regular card. Only vertical whitespace is reduced. */
+.todo-current-left{gap:6px}
+.todo-current-pocket,.todo-current-focus-pocket{padding:9px}
+.todo-current-cards{gap:14px}
+.todo-current-board .todo-list-card.compact{height:116px;min-height:116px}
+.todo-current-board .todo-list-card.compact>header{padding:8px 10px 3px}
+.todo-current-board .todo-list-card.compact .todo-list-preview{padding:0 10px 1px}
+.todo-current-board .todo-list-card.compact>footer{padding:2px 10px 7px}
+
+/* Empty Current section remains visible as a folded hint only. */
+.todo-current-section.is-empty .todo-current-pocket,
+.todo-current-focus.is-empty .todo-current-focus-pocket{
+  width:min(100%,310px);
+  min-height:46px;
+  padding:6px 9px;
+}
+.todo-current-folded-empty{min-height:30px}
+
+/* One shared browser breakpoint contract, matching the existing workspace. */
+@media (max-width:1180px){
+  .todo-planner-spread,.todo-current-board{grid-template-columns:minmax(0,2.55fr) minmax(240px,.9fr);gap:22px}
+  body.todo-mode .todo-create-actions>button{width:clamp(195px,22vw,225px);min-height:52px;font-size:16px}
+}
+@media (max-width:900px){
+  .todo-planner-spread,.todo-current-board{grid-template-columns:1fr}
+}
+@media (max-width:760px){
+  body.todo-mode .todo-content{padding-left:var(--layout-page-gutter);padding-right:var(--layout-page-gutter)}
+}
+
+/* Approved Notes category heading metric reused by every To Do section/view. */
+.todo-current-section-head h2,
+.todo-view-heading h2{
+  margin:0;
+  font-size:16px;
+  font-weight:var(--font-weight-bold);
+  letter-spacing:.45px;
+  text-transform:uppercase;
+  line-height:1.2;
+}
+
+/* Keep sorting/select controls inside the same 29px header rhythm so switching
+   views does not move the card grid vertically. */
+.todo-view-actions{align-items:center}
+.todo-view-actions select,
+.todo-view-actions .todo-select-toggle{
+  min-height:29px;
+  height:29px;
+  padding:4px 10px;
+}
+
+/* ============================================================
+   TO DO BOARD V19 — shared planner shell
+   The existing QUICK NOTES layout tokens remain the geometry source of truth.
+   The mockup defines composition only: main planner area + a stable action rail.
+   ============================================================ */
+body.todo-mode .todo-content{
+  padding-top:18px;
+}
+.todo-page-layout{
+  display:grid;
+  grid-template-columns:minmax(0,3fr) minmax(260px,.94fr);
+  gap:30px;
+  align-items:start;
+  width:100%;
+  min-width:0;
+}
+.todo-page-layout.open-list-mode{grid-template-columns:1fr}
+.todo-main-stage,.todo-side-rail{min-width:0}
+.todo-side-rail{
+  display:flex;
+  flex-direction:column;
+  gap:28px;
+  align-self:start;
+}
+body.todo-mode .todo-create-actions{
+  display:flex;
+  width:100%;
+  flex-direction:column;
+  gap:12px;
+  margin:0;
+}
+body.todo-mode .todo-create-actions>button{
+  width:100%;
+  min-height:52px;
+  padding:0 18px;
+  border-radius:var(--radius-control);
+  font-size:16px;
+  font-weight:var(--font-weight-bold);
+  line-height:1;
+}
+.todo-side-rail-content{min-width:0}
+.todo-side-rail-content:empty{display:none}
+
+/* Current: three list categories keep their breathing room and align on one
+   steady vertical rhythm. Card density is unchanged (2 preview rows). */
+.todo-current-left{
+  display:flex;
+  flex-direction:column;
+  gap:clamp(18px,2.3vh,28px);
+  min-width:0;
+}
+.todo-current-section-head{margin-bottom:5px}
+.todo-current-board .todo-list-card.compact{
+  height:116px;
+  min-height:116px;
+}
+.todo-current-board .todo-list-card.compact .todo-list-preview{padding-bottom:2px}
+.todo-current-board .todo-list-card.compact>footer{padding-top:3px}
+
+/* Focus now lives in the shared right rail under the create actions. */
+.todo-side-rail .todo-current-focus{width:100%}
+.todo-side-rail .todo-current-focus-pocket{width:100%}
+
+/* All tabs inherit the same outer page origin. Their own content may be lists,
+   tasks or a mixed view, but switching tabs does not move the page skeleton. */
+.todo-view-tools{margin-top:0}
+.todo-board-grid{display:block;min-width:0}
+.todo-view-shell{min-width:0;width:100%}
+.todo-planner-spread{
+  grid-template-columns:minmax(0,2fr) minmax(220px,1fr);
+  gap:20px;
+}
+.todo-planner-spread.lists-only,.todo-planner-spread.tasks-only{grid-template-columns:1fr}
+
+@media (max-width:1180px){
+  .todo-page-layout{grid-template-columns:minmax(0,2.55fr) minmax(240px,.9fr);gap:22px}
+  .todo-side-rail{gap:24px}
+  body.todo-mode .todo-create-actions>button{min-height:50px;font-size:15px}
+  .todo-current-left{gap:clamp(16px,2vh,24px)}
+}
+@media (max-width:900px){
+  .todo-page-layout{grid-template-columns:1fr}
+  .todo-side-rail{order:-1;gap:18px}
+  body.todo-mode .todo-create-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .todo-side-rail-content{max-width:none}
+  .todo-current-left{gap:18px}
+}
+@media (max-width:650px){
+  body.todo-mode .todo-create-actions{grid-template-columns:1fr}
+}
+.todo-current-main-only{display:block;width:100%;min-width:0}
+
+/* ============================================================
+   TO DO BOARD V20 — Current spacing correction
+   Keep V19 composition (actions + Focus in the right rail), but restore the
+   approved airy card proportions. Current previews stay at two task rows.
+   ============================================================ */
+
+/* Three Current list sections breathe evenly instead of being packed together. */
+.todo-current-left{
+  gap:clamp(24px,3vh,34px);
+}
+.todo-current-section-head{
+  margin-bottom:6px;
+}
+
+/* Restore the comfortable Current card size. Do NOT squeeze the card to make
+   room: the right-rail CTA layout already freed the necessary vertical space. */
+.todo-current-board .todo-list-card.compact{
+  height:148px;
+  min-height:148px;
+  border-radius:22px;
+}
+.todo-current-board .todo-list-card.compact>header{
+  gap:8px;
+  padding:11px 12px 5px;
+}
+.todo-current-board .todo-list-card.compact .todo-list-card-icon{
+  width:32px;
+  height:32px;
+  border-radius:9px;
+}
+.todo-current-board .todo-list-card.compact .todo-list-card-icon .ui-icon{
+  width:16px;
+  height:16px;
+}
+.todo-current-board .todo-list-card.compact .todo-list-card-title h3{
+  font-size:14px;
+  line-height:18px;
+}
+.todo-current-board .todo-list-card.compact .todo-list-card-title time{
+  margin-top:2px;
+  font-size:10px;
+}
+.todo-current-board .todo-list-card.compact .todo-pin-mark{
+  width:26px;
+  height:26px;
+}
+.todo-current-board .todo-list-card.compact .todo-card-menu-wrap>.more-btn{
+  width:27px;
+  height:27px;
+}
+.todo-current-board .todo-list-card.compact .todo-list-preview{
+  flex:1;
+  min-height:0;
+  padding:0 12px 3px;
+}
+.todo-current-board .todo-list-card.compact .todo-preview-task{
+  grid-template-columns:14px minmax(0,1fr);
+  gap:6px;
+  padding:3px 0;
+}
+.todo-current-board .todo-list-card.compact .todo-preview-task p{
+  font-size:12px;
+  line-height:16px;
+}
+.todo-current-board .todo-list-card.compact .todo-list-empty-preview{
+  margin:6px 0 0;
+  font-size:12px;
+}
+
+/* Progress remains part of the card but sits a little higher than in the old
+   airy card: larger bottom padding raises the line without compressing content. */
+.todo-current-board .todo-list-card.compact>footer{
+  gap:8px;
+  padding:5px 12px 16px;
+  font-size:10px;
+  line-height:13px;
+}
+.todo-current-board .todo-list-card.compact .todo-progress{height:4px}
+
+/* Focus cards keep a similarly relaxed visual weight in the right rail. */
+.todo-side-rail .todo-current-focus .todo-standalone-row{
+  min-height:88px;
+  border-radius:19px;
+  padding:10px 10px 10px 7px;
+}
+.todo-side-rail .todo-current-focus .todo-inline-task-text{
+  font-size:13px;
+  font-weight:650;
+}
+
+/* Empty sections remain the approved folded hint; only populated sections use
+   the full airy card height. */
+.todo-current-section.is-empty .todo-current-pocket,
+.todo-current-focus.is-empty .todo-current-focus-pocket{
+  min-height:46px;
+}
+
+@media (max-width:1180px){
+  .todo-current-left{gap:clamp(20px,2.6vh,28px)}
+  .todo-current-board .todo-list-card.compact{height:142px;min-height:142px}
+  .todo-current-board .todo-list-card.compact>footer{padding-bottom:14px}
+}
+@media (max-width:900px){
+  .todo-current-left{gap:22px}
+}
+@media (max-width:650px){
+  .todo-current-board .todo-list-card.compact{height:auto;min-height:142px}
+}
+
+/* ============================================================
+   TO DO BOARD V21 — Current-only viewport rhythm
+   Scope intentionally limited to Current. The three left sections keep their
+   approved airy cards and are distributed through the available browser
+   viewport; the right rail is aligned only after the left rhythm is resolved.
+   ============================================================ */
+#todoPage[data-todo-view="current"] .todo-current-left{
+  height:var(--todo-current-left-height,auto);
+  justify-content:space-between;
+  gap:0;
+}
+#todoPage[data-todo-view="current"] .todo-current-section-head{
+  margin-bottom:4px;
+}
+#todoPage[data-todo-view="current"] .todo-current-pocket{
+  padding:8px 9px;
+}
+/* Lift progress by roughly 1 mm without shrinking the card or its preview. */
+#todoPage[data-todo-view="current"] .todo-current-board .todo-list-card.compact>footer{
+  padding-bottom:20px;
+}
+/* On Current only, rail positions are measured from the resolved left column. */
+#todoPage[data-todo-view="current"] .todo-side-rail{
+  gap:0;
+}
+#todoPage[data-todo-view="current"] .todo-create-actions,
+#todoPage[data-todo-view="current"] .todo-side-rail-content{
+  transition:none;
+}
+/* Current keeps the same top/bottom page inset: no extra bottom scroll reserve. */
+#todoPage[data-todo-view="current"]{
+  padding-bottom:18px;
+}
+
+/* ============================================================
+   TO DO BOARD V22 — non-Current shared slot contract
+   Current keeps the approved V21 composition unchanged.
+   Every other view uses three equal visual slots. Mixed views reserve
+   the first two slots for lists and the third slot for single tasks.
+   ============================================================ */
+.todo-header-actions{display:none;align-items:center;min-width:0}
+body.todo-mode .top-actions>.todo-header-actions:not(:empty){display:flex}
+body.todo-mode .top-actions>.todo-header-actions>.todo-create-actions{
+  display:flex;
+  flex-direction:row;
+  align-items:center;
+  width:auto;
+  gap:9px;
+  margin:0;
+}
+/* Current geometry writes an inline margin-top for the right rail. When the same
+   action group moves back into the header, non-Current views explicitly neutralise
+   that Current-only inline offset without changing the JS placement logic. */
+body.todo-mode.todo-noncurrent-view .top-actions>.todo-header-actions>.todo-create-actions{
+  margin:0 !important;
+}
+body.todo-mode .top-actions>.todo-header-actions>.todo-create-actions>button{
+  width:auto;
+  min-width:0;
+  height:36px;
+  min-height:36px;
+  padding:0 16px;
+  border-radius:9px;
+  font-size:14px;
+  font-weight:var(--font-weight-bold);
+  line-height:1;
+  white-space:nowrap;
+}
+
+/* No permanent right rail outside Current: the working area uses the same
+   outer origin, while creation actions live in the shared topbar. */
+#todoPage:not([data-todo-view="current"]) .todo-page-layout{grid-template-columns:1fr}
+#todoPage:not([data-todo-view="current"]) .todo-side-rail{display:none!important}
+
+/* Stable three-slot geometry. With a 15px gap this exact split makes each
+   list card in the two-column left zone the same width as the task slot. */
+#todoPage:not([data-todo-view="current"]){--todo-v22-slot-gap:15px}
+#todoPage:not([data-todo-view="current"]) .todo-planner-spread{
+  display:grid;
+  grid-template-columns:calc(66.6667% - 5px) calc(33.3333% - 10px);
+  gap:var(--todo-v22-slot-gap);
+  align-items:start;
+  width:100%;
+}
+#todoPage:not([data-todo-view="current"]) .todo-planner-spread .todo-list-grid{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:var(--todo-v22-slot-gap);
+}
+#todoPage:not([data-todo-view="current"]) .todo-planner-spread .todo-task-column{
+  gap:var(--todo-v22-slot-gap);
+}
+
+/* Dedicated library views keep the exact same slot width and never stretch
+   one or two objects to fill the row. All Lists and task-only libraries may
+   use all three equal slots; Pinned intentionally remains list-oriented. */
+#todoPage[data-todo-view="all-lists"] .todo-library-grid,
+#todoPage[data-todo-view="focus"] .todo-task-library,
+#todoPage[data-todo-view="standalone"] .todo-task-library{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:var(--todo-v22-slot-gap);
+  max-width:none;
+}
+#todoPage[data-todo-view="pinned"] .todo-library-grid{
+  display:grid;
+  grid-template-columns:repeat(2,calc(33.3333% - 10px));
+  gap:var(--todo-v22-slot-gap);
+  justify-content:start;
+}
+
+/* One object = one container. These wrappers never merge or stretch together. */
+#todoPage:not([data-todo-view="current"]) .todo-object-pocket{
+  box-sizing:border-box;
+  width:100%;
+  min-width:0;
+  padding:9px;
+  border-radius:22px;
+}
+#todoPage:not([data-todo-view="current"]) .todo-object-pocket>.todo-list-card,
+#todoPage:not([data-todo-view="current"]) .todo-object-pocket>.todo-standalone-row{
+  width:100%;
+  min-width:0;
+}
+
+/* Responsive behaviour follows the existing QUICK NOTES breakpoints rather
+   than introducing a separate desktop-only board. */
+@media (max-width:1180px){
+  body.todo-mode .top-actions>.todo-header-actions>.todo-create-actions>button{min-width:0;height:36px;min-height:36px;font-size:13px}
+  #todoPage:not([data-todo-view="current"]) .todo-planner-spread{grid-template-columns:calc(66.6667% - 4px) calc(33.3333% - 8px);gap:12px}
+  #todoPage:not([data-todo-view="current"]){--todo-v22-slot-gap:12px}
+  #todoPage[data-todo-view="pinned"] .todo-library-grid{grid-template-columns:repeat(2,calc(33.3333% - 8px))}
+}
+@media (max-width:900px){
+  body.todo-mode .top-actions>.todo-header-actions{display:none!important}
+  #todoPage:not([data-todo-view="current"]) .todo-planner-spread{grid-template-columns:1fr}
+  #todoPage:not([data-todo-view="current"]) .todo-planner-spread .todo-list-grid,
+  #todoPage[data-todo-view="all-lists"] .todo-library-grid,
+  #todoPage[data-todo-view="pinned"] .todo-library-grid,
+  #todoPage[data-todo-view="focus"] .todo-task-library,
+  #todoPage[data-todo-view="standalone"] .todo-task-library{grid-template-columns:1fr}
+}
+
+/* ============================================================
+   V25 — direct list workflow, contextual back, sticky list controls,
+   and unified Sort / Select controls. Current board geometry untouched.
+   ============================================================ */
+
+/* Non-compact list cards: calendar + pin are first-class actions, menu is delete-only. */
+.todo-list-card:not(.compact)>header{
+  grid-template-columns:auto minmax(0,1fr) auto auto auto;
+}
+.todo-card-date,.todo-card-pin{
+  display:grid;place-items:center;width:28px;height:28px;padding:0;border:0;border-radius:8px;
+  background:transparent;color:var(--text-secondary);cursor:pointer;opacity:.58;transition:.14s ease;
+}
+.todo-card-date .ui-icon,.todo-card-pin .ui-icon{width:var(--icon-size-small);height:var(--icon-size-small)}
+.todo-card-date:hover,.todo-card-pin:hover,.todo-card-date:focus-visible,.todo-card-pin:focus-visible{
+  opacity:1;background:color-mix(in srgb,var(--action-primary) 10%,transparent);outline:0
+}
+.todo-card-date.active{opacity:1;color:var(--todo-board-deadline,var(--todo-undated))}
+.todo-card-pin.active{opacity:1;color:var(--todo-board-pin,var(--todo-upcoming))}
+
+/* Context-aware return stays OUTSIDE the open-list card. */
+.todo-open-list{max-width:980px;margin:0 auto;padding-bottom:18px}
+.todo-open-list-nav{display:flex;align-items:center;margin:0 0 10px}
+.todo-open-list-card{
+  display:flex;flex-direction:column;min-height:0;max-height:calc(100vh - 150px);
+  overflow:hidden;border-radius:20px
+}
+.todo-open-list-sticky{flex:0 0 auto;position:relative;z-index:4}
+.todo-open-list-head{
+  grid-template-columns:auto minmax(0,1fr) auto auto auto auto;
+  padding:15px 18px 11px
+}
+.todo-context-back{
+  display:inline-flex;align-items:center;gap:6px;min-height:34px;max-width:180px;padding:0 11px;
+  border:0;border-radius:10px;
+  background:color-mix(in srgb,var(--action-primary) 9%,transparent);
+  color:color-mix(in srgb,var(--action-primary) 78%,var(--text-secondary));
+  font:700 11px/1 inherit;cursor:pointer;white-space:nowrap;
+  transition:background .14s ease,color .14s ease
+}
+.todo-context-back span{overflow:hidden;text-overflow:ellipsis}
+.todo-context-back:hover,.todo-context-back:focus-visible{
+  color:var(--action-primary);background:color-mix(in srgb,var(--action-primary) 15%,transparent);outline:0
+}
+.todo-open-title-input{
+  min-width:0;width:100%;height:38px;padding:4px 7px;border:1px solid var(--action-primary);border-radius:9px;
+  background:var(--surface-card);color:var(--text-primary);font:800 22px/1.2 inherit;outline:0;
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--action-primary) 12%,transparent)
+}
+.todo-open-progress{padding-bottom:11px}
+.todo-list-task-rows{
+  flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:2px 13px 0;
+  scrollbar-width:thin;scrollbar-color:color-mix(in srgb,var(--text-secondary) 30%,transparent) transparent
+}
+.todo-list-task-rows::-webkit-scrollbar{width:5px}
+.todo-list-task-rows::-webkit-scrollbar-track{background:transparent}
+.todo-list-task-rows::-webkit-scrollbar-thumb{background:color-mix(in srgb,var(--text-secondary) 26%,transparent);border-radius:999px}
+.todo-new-task-row{flex:0 0 auto}
+
+/* Single-task dialog: focus is the same star interaction used elsewhere. */
+.todo-focus-picker{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;margin:14px 0;
+  padding:2px 0 14px;border-bottom:1px solid var(--border-subtle);color:var(--text-secondary);font-size:11px;font-weight:650
+}
+.todo-modal-star{
+  display:grid;place-items:center;width:38px;height:38px;padding:0;border:1px solid var(--border-subtle);
+  border-radius:10px;background:var(--surface-control);color:var(--text-secondary);font-size:24px;line-height:1;cursor:pointer;
+  transition:.14s ease
+}
+.todo-modal-star:hover,.todo-modal-star:focus-visible{
+  color:var(--todo-board-focus,var(--todo-undated));border-color:color-mix(in srgb,var(--todo-board-focus,var(--todo-undated)) 35%,var(--border-subtle));outline:0
+}
+.todo-modal-star.active{
+  color:var(--todo-board-focus,var(--todo-undated));background:color-mix(in srgb,var(--todo-board-focus,var(--todo-undated)) 10%,var(--surface-card))
+}
+.todo-modal-star:disabled{opacity:.4;cursor:not-allowed}
+
+/* Sort exists only on Single tasks / All lists and visually matches Select. */
+.todo-view-actions{position:relative;align-items:center}
+.todo-sort-wrap{position:relative;display:inline-flex}
+.todo-sort-toggle,.todo-select-toggle{
+  height:34px!important;min-height:34px!important;padding:0 12px!important;border-radius:9px!important;
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:650
+}
+.todo-sort-toggle b{font-size:14px;font-weight:700;line-height:1;opacity:.65;transform:translateY(-1px)}
+.todo-sort-menu{right:0;left:auto;top:calc(100% + 6px);width:190px;z-index:30}
+.todo-sort-menu button{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%}
+.todo-sort-menu button.active{font-weight:750;color:var(--action-primary)}
+
+@media (max-width:900px){
+  .todo-open-list-head{grid-template-columns:auto minmax(0,1fr) auto auto auto}
+  .todo-context-back{max-width:180px}
+  .todo-date-button{grid-column:auto;grid-row:auto}
+}

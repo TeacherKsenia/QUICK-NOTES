@@ -1,0 +1,52 @@
+name: Build Windows Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  windows-release:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Stamp repository into package
+        shell: pwsh
+        run: |
+          node -e "const fs=require('fs'); const p=require('./package.json'); p.repository='https://github.com/${{ github.repository }}'; fs.writeFileSync('package.json', JSON.stringify(p,null,2)+'\n');"
+
+      - name: Verify tag matches package version
+        shell: pwsh
+        run: |
+          $tag = '${{ github.ref_name }}'.TrimStart('v')
+          $version = node -p "require('./package.json').version"
+          if ($tag -ne $version) { throw "Tag v$tag does not match package.json version $version" }
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build installer
+        run: npm run dist:win
+
+      - name: Create or update GitHub Release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          $tag = "${{ github.ref_name }}"
+          gh release view $tag *> $null
+          if ($LASTEXITCODE -eq 0) {
+            gh release upload $tag "dist/Quick-Notes-Setup.exe" --clobber
+          } else {
+            gh release create $tag "dist/Quick-Notes-Setup.exe" --title "QUICK NOTES $tag" --generate-notes
+          }

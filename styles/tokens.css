@@ -1,0 +1,179 @@
+:root {
+  /* Semantic color roles. Existing legacy variables remain as compatibility inputs
+     until every shared component has migrated to these names. */
+  --color-canvas: var(--bg);
+  --color-surface: var(--panel);
+  --color-surface-sidebar: var(--sidebar);
+  --color-surface-sidebar-raised: var(--sidebar-2);
+  --color-text: var(--ink);
+  --color-text-muted: var(--muted);
+  --color-divider: var(--line);
+  --color-accent: var(--green);
+  --color-accent-soft: var(--green-2);
+
+  --surface-page: var(--color-canvas);
+  --surface-card: var(--color-surface);
+  --surface-control: var(--color-surface);
+  --surface-navigation: var(--color-surface-sidebar);
+  --surface-navigation-control: var(--color-surface-sidebar-raised);
+  --text-primary: var(--color-text);
+  --text-secondary: var(--color-text-muted);
+  --border-subtle: var(--color-divider);
+  --action-primary: var(--color-accent);
+  --action-primary-soft: var(--color-accent-soft);
+  --todo-today: #6334d8;
+  --todo-today-soft: #f0ebff;
+  --todo-undated: #ffb800;
+  --todo-undated-soft: #fff7dc;
+  --todo-upcoming: #079d70;
+  --todo-upcoming-soft: #e8f8f2;
+
+  /* Shared typography roles. Values mirror the approved interface. */
+  --font-family-ui: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-size-body: 14px;
+  --font-size-caption: 11px;
+  --font-size-label: 12px;
+  --font-weight-regular: 400;
+  --font-weight-medium: 600;
+  --font-weight-bold: 700;
+
+  /* Central icon sizing. Edit ONLY these five values to resize icon families. */
+  --icon-size-small: 16px;
+  --icon-size-ui: 20px;
+  --icon-size-sidebar: 22px;
+  --icon-size-category: 22px;
+  --icon-size-feature: 27px;
+
+  /* Shared shape/elevation roles. */
+  --radius-control: 9px;
+  --radius-card: var(--radius);
+  --radius-dialog: 20px;
+  --shadow-card: var(--shadow);
+  --shadow-dialog: var(--shadow);
+
+  /* Shared motion roles. */
+  --motion-fast: 150ms;
+  --motion-standard: 200ms;
+  --easing-standard: ease;
+
+  /* Layer contract. */
+  --z-sidebar: 20;
+  --z-sticky-filter: 9;
+  --z-topbar: 10;
+  --z-floating: 30;
+  --z-overlay: 50;
+  --z-toast: 80;
+
+  /* Shared application geometry. Themes must not override these values. */
+  --layout-topbar-height: 73px;
+  --layout-sidebar-width: 270px;
+  --layout-content-max-width: 1320px;
+  --layout-page-gutter: 42px;
+  --layout-sticky-filter-top: var(--layout-topbar-height);
+  --layout-floating-inline: 30px;
+  --layout-floating-block: 26px;
+
+  /* Two-row sticky workspace header. Themes only provide the surfaces;
+     geometry remains shared in layout.css. */
+  --sticky-topbar-surface: rgba(245, 245, 242, .985);
+  --sticky-filter-surface: rgba(245, 245, 242, .985);
+  --sticky-divider: var(--border-subtle);
+}
+
+body.font-large {
+  --font-size-body: 15px;
+}
+
+body.font-extra {
+  --font-size-body: 16px;
+}
+
+/* Minimalism — closed accent palette.
+   These tokens are the only accent colours approved for this theme.
+   Neutral text may switch between the dark/light text tokens for contrast. */
+body.theme-minimalism {
+  --minimal-sidebar: #1D2725;
+  --minimal-sidebar-raised: #26322F;
+  --minimal-sidebar-selected: #31413D;
+  --minimal-canvas: #F5F5F2;
+  --minimal-card: #FFFFFF;
+  --minimal-action: #1C6856;
+  --minimal-orange: #E19155;
+  --minimal-yellow: #F9C66B;
+  --minimal-olive: #839464;
+  --minimal-coral: #F88572;
+  --minimal-blue-grey: #8497B0;
+  --minimal-text-dark: #1B2422;
+  --minimal-text-light: #F7FAF8;
+
+  /* Approved category icon colours sampled from the same reference. */
+  --minimal-vocabulary-soft: #E5ECF5;
+  --minimal-vocabulary-ink: #5D7392;
+  --minimal-grammar-soft: #E8E3F1;
+  --minimal-grammar-ink: #74658F;
+  --minimal-errors-soft: #F5E6E1;
+  --minimal-errors-ink: #A26754;
+  --minimal-interests-soft: #E8EFE4;
+  --minimal-interests-ink: #608259;
+  --minimal-other-soft: #F2EBDD;
+  --minimal-other-ink: #9A7950;
+
+  /* Fixed object roles for screens not pictured in the reference. They reuse
+     only the approved reference palette and must not be re-coloured locally. */
+  --minimal-dashboard-workspace: var(--minimal-blue-grey);
+  --minimal-dashboard-quick: var(--minimal-yellow);
+  --minimal-dashboard-todo: var(--minimal-olive);
+  --minimal-dashboard-lesson: var(--minimal-orange);
+
+  --bg: var(--minimal-canvas);
+  --panel: var(--minimal-card);
+  --sidebar: var(--minimal-sidebar);
+  --sidebar-2: var(--minimal-sidebar-raised);
+  --ink: var(--minimal-text-dark);
+  --muted: color-mix(in srgb, var(--minimal-text-dark) 58%, var(--minimal-card));
+  --line: color-mix(in srgb, var(--minimal-text-dark) 11%, var(--minimal-card));
+  --green: var(--minimal-action);
+  --green-2: color-mix(in srgb, var(--minimal-action) 16%, var(--minimal-card));
+
+  /* To Do uses only the same approved palette. */
+  --todo-today: var(--minimal-yellow);
+  --todo-today-soft: color-mix(in srgb, var(--minimal-yellow) 22%, var(--minimal-card));
+  --todo-undated: var(--minimal-blue-grey);
+  --todo-undated-soft: color-mix(in srgb, var(--minimal-blue-grey) 20%, var(--minimal-card));
+  --todo-upcoming: var(--minimal-olive);
+  --todo-upcoming-soft: color-mix(in srgb, var(--minimal-olive) 18%, var(--minimal-card));
+}
+
+/* ============================================================
+   Approved per-theme accent palette for shared navigation/section identity.
+   Values are promoted from colors already used by QUICK NOTES avatars,
+   category accents and theme surfaces. New feature CSS must reference these
+   tokens rather than introducing local hard-coded colors.
+   ============================================================ */
+body.theme-forest-night {
+  --theme-accent-yellow:#ffb800;
+  --theme-accent-blue:#1685e6;
+  --theme-accent-teal:#16aaa9;
+  --theme-accent-purple:#7839db;
+  --theme-accent-green:#159255;
+  --theme-accent-pink:#d34f75;
+  --theme-accent-orange:#c77a18;
+}
+body.theme-minimalism {
+  --theme-accent-yellow:var(--minimal-yellow);
+  --theme-accent-blue:var(--minimal-blue-grey);
+  --theme-accent-teal:var(--minimal-action);
+  --theme-accent-purple:var(--minimal-orange);
+  --theme-accent-green:var(--minimal-olive);
+  --theme-accent-pink:var(--minimal-coral);
+  --theme-accent-orange:var(--minimal-orange);
+}
+body.theme-night-forest {
+  --theme-accent-yellow:#b4aa95;
+  --theme-accent-blue:#8b7d62;
+  --theme-accent-teal:#687b5d;
+  --theme-accent-purple:#718847;
+  --theme-accent-green:#83965b;
+  --theme-accent-pink:#c8cec2;
+  --theme-accent-orange:#aebdaa;
+}

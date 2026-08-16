@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>QUICK NOTES · Lesson mode</title>
+</head>
+<body>
+  <main class="lesson-mini">
+    <header>
+      <div><span class="live-dot"></span><div><h1 id="lessonHeading">Lesson mode</h1><p id="lessonSubheading">Quick capture</p></div></div>
+      <button id="miniClose" type="button" aria-label="Close">×</button>
+    </header>
+    <div id="emptyPeople" class="empty-lesson" hidden></div>
+    <form id="miniForm">
+      <label><span id="personLabel">Student or group</span><select id="miniPerson"></select></label>
+      <label id="miniAboutWrap" hidden><span id="aboutLabel">Note about</span><select id="miniAbout"></select></label>
+      <label><span id="categoryLabel">Category</span><select id="miniCategory"></select></label>
+      <label><span id="noteLabel">Note</span><textarea id="miniText" rows="4" maxlength="500" required placeholder="Type an observation…"></textarea></label>
+      <button class="add" id="addNote" type="submit">Add note <kbd>Ctrl ↵</kbd></button>
+    </form>
+    <p class="status" id="miniStatus">Ready for your next note</p>
+  </main>
+  <script src="../src/ui/lesson-mode.js"></script>
+  <script src="lesson-window.js"></script>
+</body>
+</html>

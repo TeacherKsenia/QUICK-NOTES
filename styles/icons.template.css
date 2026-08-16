@@ -1,0 +1,126 @@
+/*
+ * Replaceable icon system.
+ * SVG files are used only as CSS masks: their own fill/stroke colours are ignored.
+ * The visible icon colour always comes from CSS `color` / theme tokens via currentColor.
+ */
+.icon-mask{
+  display:inline-block;
+  flex:none;
+  width:var(--icon-size-ui);
+  height:var(--icon-size-ui);
+  background-color:currentColor;
+  -webkit-mask-image:var(--icon-mask-image);
+  mask-image:var(--icon-mask-image);
+  -webkit-mask-repeat:no-repeat;
+  mask-repeat:no-repeat;
+  -webkit-mask-position:center;
+  mask-position:center;
+  -webkit-mask-size:contain;
+  mask-size:contain;
+  -webkit-mask-mode:alpha;
+  mask-mode:alpha;
+  pointer-events:none;
+}
+
+.icon-ui-all{--icon-mask-image:url("../assets/icons/ui/all.svg")}
+.icon-ui-arrow-left{--icon-mask-image:url("../assets/icons/ui/arrow-left.svg")}
+.icon-ui-arrow-right{--icon-mask-image:url("../assets/icons/ui/arrow-right.svg")}
+.icon-ui-calendar{--icon-mask-image:url("../assets/icons/ui/calendar.svg")}
+.icon-ui-check{--icon-mask-image:url("../assets/icons/ui/check.svg")}
+.icon-ui-chevron-down{--icon-mask-image:url("../assets/icons/ui/chevron-down.svg")}
+.icon-ui-chevron-left{--icon-mask-image:url("../assets/icons/ui/chevron-left.svg")}
+.icon-ui-chevron-right{--icon-mask-image:url("../assets/icons/ui/chevron-right.svg")}
+.icon-ui-clock{--icon-mask-image:url("../assets/icons/ui/clock.svg")}
+.icon-ui-close{--icon-mask-image:url("../assets/icons/ui/close.svg")}
+.icon-ui-download{--icon-mask-image:url("../assets/icons/ui/download.svg")}
+.icon-ui-drag{--icon-mask-image:url("../assets/icons/ui/drag.svg")}
+.icon-ui-edit{--icon-mask-image:url("../assets/icons/ui/edit.svg")}
+.icon-ui-eye{--icon-mask-image:url("../assets/icons/ui/eye.svg")}
+.icon-ui-eye-off{--icon-mask-image:url("../assets/icons/ui/eye-off.svg")}
+.icon-ui-focus{--icon-mask-image:url("../assets/icons/ui/focus.svg")}
+.icon-ui-home{--icon-mask-image:url("../assets/icons/ui/home.svg")}
+.icon-ui-info{--icon-mask-image:url("../assets/icons/ui/info.svg")}
+.icon-ui-lightning{--icon-mask-image:url("../assets/icons/ui/lightning.svg")}
+.icon-ui-list{--icon-mask-image:url("../assets/icons/ui/list.svg")}
+.icon-ui-menu{--icon-mask-image:url("../assets/icons/ui/menu.svg")}
+.icon-ui-more{--icon-mask-image:url("../assets/icons/ui/more.svg")}
+.icon-ui-move{--icon-mask-image:url("../assets/icons/ui/move.svg")}
+.icon-ui-pin{--icon-mask-image:url("../assets/icons/ui/pin.svg")}
+.icon-ui-plus{--icon-mask-image:url("../assets/icons/ui/plus.svg")}
+.icon-ui-profile{--icon-mask-image:url("../assets/icons/ui/profile.svg")}
+.icon-ui-recent{--icon-mask-image:url("../assets/icons/ui/recent.svg")}
+.icon-ui-search{--icon-mask-image:url("../assets/icons/ui/search.svg")}
+.icon-ui-settings{--icon-mask-image:url("../assets/icons/ui/settings.svg")}
+.icon-ui-sliders{--icon-mask-image:url("../assets/icons/ui/sliders.svg")}
+.icon-ui-sort{--icon-mask-image:url("../assets/icons/ui/sort.svg")}
+.icon-ui-sparkle{--icon-mask-image:url("../assets/icons/ui/sparkle.svg")}
+.icon-ui-star{--icon-mask-image:url("../assets/icons/ui/star.svg")}
+.icon-ui-star-filled{--icon-mask-image:url("../assets/icons/ui/star-filled.svg")}
+.icon-ui-task{--icon-mask-image:url("../assets/icons/ui/task.svg")}
+.icon-ui-trash{--icon-mask-image:url("../assets/icons/ui/trash.svg")}
+.icon-ui-users{--icon-mask-image:url("../assets/icons/ui/users.svg")}
+.icon-category-alert{--icon-mask-image:url("../assets/icons/category-picker/alert.svg")}
+.icon-category-book-open{--icon-mask-image:url("../assets/icons/category-picker/book-open.svg")}
+.icon-category-bookmark{--icon-mask-image:url("../assets/icons/category-picker/bookmark.svg")}
+.icon-category-brain{--icon-mask-image:url("../assets/icons/category-picker/brain.svg")}
+.icon-category-checklist{--icon-mask-image:url("../assets/icons/category-picker/checklist.svg")}
+.icon-category-clock{--icon-mask-image:url("../assets/icons/category-picker/clock.svg")}
+.icon-category-flag{--icon-mask-image:url("../assets/icons/category-picker/flag.svg")}
+.icon-category-gamepad{--icon-mask-image:url("../assets/icons/category-picker/gamepad.svg")}
+.icon-category-globe{--icon-mask-image:url("../assets/icons/category-picker/globe.svg")}
+.icon-category-group{--icon-mask-image:url("../assets/icons/category-picker/group.svg")}
+.icon-category-headphones{--icon-mask-image:url("../assets/icons/category-picker/headphones.svg")}
+.icon-category-heart{--icon-mask-image:url("../assets/icons/category-picker/heart.svg")}
+.icon-category-music{--icon-mask-image:url("../assets/icons/category-picker/music.svg")}
+.icon-category-paw{--icon-mask-image:url("../assets/icons/category-picker/paw.svg")}
+.icon-category-pencil-spark{--icon-mask-image:url("../assets/icons/category-picker/pencil-spark.svg")}
+.icon-category-person{--icon-mask-image:url("../assets/icons/category-picker/person.svg")}
+.icon-category-rocket{--icon-mask-image:url("../assets/icons/category-picker/rocket.svg")}
+.icon-category-shirt{--icon-mask-image:url("../assets/icons/category-picker/shirt.svg")}
+.icon-category-sparkle{--icon-mask-image:url("../assets/icons/category-picker/sparkle.svg")}
+.icon-category-speech{--icon-mask-image:url("../assets/icons/category-picker/speech.svg")}
+.icon-category-star{--icon-mask-image:url("../assets/icons/category-picker/star.svg")}
+.icon-category-syntax{--icon-mask-image:url("../assets/icons/category-picker/syntax.svg")}
+.icon-category-trophy{--icon-mask-image:url("../assets/icons/category-picker/trophy.svg")}
+.icon-category-type{--icon-mask-image:url("../assets/icons/category-picker/type.svg")}
+
+/* Filled-state companion for focus stars. Shape stays replaceable; colour still comes from the theme. */
+.todo-task-star.active .icon-ui-star,
+.todo-modal-star.active .icon-ui-star{
+  --icon-mask-image:url("../assets/icons/ui/star-filled.svg");
+}
+
+
+/* Component sizing. These rules only size the mask; theme CSS continues to own `color`. */
+/* Central role sizing. The five values live in styles/tokens.css.
+   SVG replacement changes shape only; these rules own the visible size. */
+.category-svg.icon-mask{width:var(--icon-size-category);height:var(--icon-size-category)}
+.todo-sidebar-item .avatar .ui-icon.icon-mask,.sidebar-home-btn .ui-icon.icon-mask{width:var(--icon-size-sidebar);height:var(--icon-size-sidebar)}
+
+.dashboard-card-icon .ui-icon{width:var(--icon-size-feature);height:var(--icon-size-feature);vertical-align:0}
+.dashboard-settings{gap:7px}
+.dashboard-settings>.ui-icon{width:var(--icon-size-small);height:var(--icon-size-small);vertical-align:0}
+#settingsBtn{display:inline-flex;align-items:center;gap:7px}
+#settingsBtn>.ui-icon{width:var(--icon-size-small);height:var(--icon-size-small);vertical-align:0}
+.lesson-btn{display:inline-flex;align-items:center;gap:7px}
+.lesson-btn>.ui-icon{width:var(--icon-size-small);height:var(--icon-size-small);margin:0;vertical-align:0}
+.lesson-btn>span:not(.ui-icon){margin:0}
+.sidebar-home-btn{display:grid;place-items:center}
+.search>span>.ui-icon{width:var(--icon-size-ui);height:var(--icon-size-ui);vertical-align:0}
+.search-clear .ui-icon{width:var(--icon-size-small);height:var(--icon-size-small);vertical-align:0}
+.icon-btn .ui-icon{width:var(--icon-size-ui);height:var(--icon-size-ui);vertical-align:0}
+.close{display:grid;place-items:center}
+.close .ui-icon{width:var(--icon-size-small);height:var(--icon-size-small);vertical-align:0}
+.photo-remove-icon .ui-icon,.dialog-delete .ui-icon{vertical-align:0}
+.settings-card-icon>.ui-icon{width:var(--icon-size-feature);height:var(--icon-size-feature);vertical-align:0}
+.settings-card-arrow.ui-icon{width:var(--icon-size-small);height:var(--icon-size-small);vertical-align:0}
+.settings-back>.ui-icon{width:var(--icon-size-small);height:var(--icon-size-small);font-size:inherit;line-height:normal;vertical-align:0}
+.settings-info-btn .ui-icon{width:var(--icon-size-small);height:var(--icon-size-small);vertical-align:0}
+.todo-modal-star .ui-icon{width:var(--icon-size-ui);height:var(--icon-size-ui);vertical-align:0}
+.capture-person-search .capture-search-icon{width:var(--icon-size-small);height:var(--icon-size-small);vertical-align:0}
+
+/* Existing small-screen rule hides dashboard text; restore the icon itself. */
+@media(max-width:620px){
+  .dashboard-settings>.ui-icon{display:inline-block}
+  .dashboard-settings>span:not(.ui-icon){display:none}
+}
