@@ -875,7 +875,7 @@ body:not(.theme-forest-night):not(.theme-night-forest) .dashboard-brand{color:#e
   .dashboard-stage{height:auto;min-height:calc(100vh - 112px)}
   .dashboard-recent{margin-top:24px}
 }
-@media(max-width:1000px),(max-height:700px){
+@media(max-width:1000px){
   .dashboard{height:auto;min-height:100vh;overflow:auto}
   .dashboard-stage{height:auto;padding-bottom:20px;display:block}
   .dashboard-grid{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:30px}
@@ -888,7 +888,7 @@ body:not(.theme-forest-night):not(.theme-night-forest) .dashboard-brand{color:#e
   .concept-list{grid-template-columns:1fr}
 }
 /* Dashboard geometry matched to the approved 1918 Ãƒâ€” 853 reference. Colors stay untouched. */
-@media(min-width:1201px) and (min-height:701px){
+@media(min-width:1201px){
   .dashboard{height:100vh;min-height:0;overflow:hidden;padding:46px 2.65vw 22px}
 
   .dashboard-top,.dashboard-stage,.dashboard-footer{width:100%;max-width:none;margin:0}
